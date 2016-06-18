@@ -44,13 +44,30 @@ public class MainActivity extends AppCompatActivity
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
+
+        //Click Item to set alarm detail.
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String thisTime = alarmTimeList.get(position);
+
+                Intent goToSetExistedAlarm = new Intent();
+
+                Bundle alarmBundle = new Bundle();
+                Alarm_Item chosenAlarm = alarmList.get(position);
+                alarmBundle.putInt("Hour", chosenAlarm.getHour());
+                alarmBundle.putInt("Minute", chosenAlarm.getMinute());
+                alarmBundle.putBooleanArray("WeekStart", chosenAlarm.weekStart);
+                alarmBundle.putInt("Index", position);
+                alarmBundle.putString("ShowTimeText", alarmTimeList.get(position));
+
+                goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
+
+                goToSetExistedAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
+                MainActivity.this.startActivityForResult(goToSetExistedAlarm, 0);
             }
         });
 
+        //New a alarm.
         GregorianCalendar calendar = new GregorianCalendar();
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -80,12 +97,7 @@ public class MainActivity extends AppCompatActivity
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent goToSetNewAlarm = new Intent();
-                goToSetNewAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
-                MainActivity.this.startActivityForResult(goToSetNewAlarm, 0);*/
-
                 timePickerDialog.show();
-
                 adapter.notifyDataSetChanged();
             }
         });
@@ -104,10 +116,19 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             //將包裹從 Intent 中取出。
-            Bundle argument = data.getExtras();
+            Bundle alarmBundle = data.getBundleExtra("ReturnBundle");
             //將回傳值用指定的 key 取出
-            String timeBufffer = argument.getString("returnValue");
-            alarmTimeList.add(timeBufffer);
+            final int index = alarmBundle.getInt("Index");
+            Alarm_Item alarmBeSet = alarmList.get(index);
+            alarmTimeList.remove(index);
+
+            alarmBeSet.setHour(alarmBundle.getInt("Hour"));
+            alarmBeSet.setMinute(alarmBundle.getInt("Minute"));
+            final boolean[] weekStart = alarmBundle.getBooleanArray("WeekStart");
+            for(int i = 0 ; i < 7 ; i++){
+                alarmBeSet.weekStart[i] = weekStart[i];
+            }
+            alarmTimeList.add(index, alarmBundle.getString("ShowTimeText"));
             adapter.notifyDataSetChanged();
         }
     }
