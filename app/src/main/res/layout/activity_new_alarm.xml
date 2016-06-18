@@ -9,26 +9,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.nthucs.sleepingalarm.NewAlarmActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="time"
-        android:ems="10"
-        android:id="@+id/alarmTime"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Time"
         android:id="@+id/titleTime"
-        android:layout_alignBottom="@+id/alarmTime"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/alarmTime"
         android:textSize="30dp"
         android:textAlignment="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set OK"
+        android:id="@+id/OKbutton"
+        android:layout_below="@+id/alarmTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="108dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/alarmTime"
+        android:layout_alignBottom="@+id/titleTime"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/titleTime" />
 
 </RelativeLayout>

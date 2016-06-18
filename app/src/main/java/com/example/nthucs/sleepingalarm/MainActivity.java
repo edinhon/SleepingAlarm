@@ -1,5 +1,7 @@
 package com.example.nthucs.sleepingalarm;
 
+import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,16 +15,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ArrayList<String> alarmList = new ArrayList<String>();
+    ArrayList<String> alarmTimeList = new ArrayList<String>();
+    ArrayList<Alarm_Item> alarmList = new ArrayList<Alarm_Item>();
     ArrayAdapter adapter;
+    TimePickerDialog timePickerDialog;
+    FloatingActionButton addButton;
+    //String timeBufffer = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +42,51 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
-        final ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmList);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String thisTime = alarmTimeList.get(position);
+            }
+        });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        GregorianCalendar calendar = new GregorianCalendar();
+        timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String temp;
+                if(hourOfDay >= 12){
+                    if((hourOfDay-12) >= 10) temp = "PM " + (hourOfDay-12);
+                    else temp = "PM 0" + (hourOfDay-12);
+
+                    if(minute >= 10)temp += " : " + minute;
+                    else temp += " : 0" + minute;
+                }else{
+                    if(hourOfDay >= 10) temp = "AM " + hourOfDay;
+                    else temp = "AM 0" + hourOfDay;
+
+                    if(minute >= 10)temp += " : " + minute;
+                    else temp += " : 0" + minute;
+                }
+                alarmTimeList.add(temp);
+                Alarm_Item newAlarm = new Alarm_Item(hourOfDay, minute);
+                alarmList.add(newAlarm);
+                adapter.notifyDataSetChanged();
+            }
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+        addButton = (FloatingActionButton) findViewById(R.id.fab);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alarmList.add("new alarm");
+                /*Intent goToSetNewAlarm = new Intent();
+                goToSetNewAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
+                MainActivity.this.startActivityForResult(goToSetNewAlarm, 0);*/
+
+                timePickerDialog.show();
+
                 adapter.notifyDataSetChanged();
-                newAnAlarm();
             }
         });
 
@@ -55,10 +100,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void newAnAlarm(){
-        Intent intent = new Intent();
-        intent.setClass(MainActivity.this, NewAlarmActivity.class);
-        startActivity(intent);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            //將包裹從 Intent 中取出。
+            Bundle argument = data.getExtras();
+            //將回傳值用指定的 key 取出
+            String timeBufffer = argument.getString("returnValue");
+            alarmTimeList.add(timeBufffer);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
