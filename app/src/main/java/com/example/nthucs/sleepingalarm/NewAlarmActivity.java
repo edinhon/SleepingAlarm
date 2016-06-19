@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ public class NewAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_alarm);
+        getSupportActionBar().setTitle("Alarm Detail");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Take argument from bundle.
         Bundle alarmBundle = getIntent().getBundleExtra("AlarmBundle");
@@ -138,6 +141,17 @@ public class NewAlarmActivity extends AppCompatActivity {
             }
             if(temp != "")repeatBeSet.setText(temp);
             else repeatBeSet.setText("None Repeat");
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

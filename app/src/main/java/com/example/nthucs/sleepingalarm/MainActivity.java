@@ -2,10 +2,12 @@ package com.example.nthucs.sleepingalarm;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +75,31 @@ public class MainActivity extends AppCompatActivity
 
                 goToSetExistedAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
                 MainActivity.this.startActivityForResult(goToSetExistedAlarm, 0);
+            }
+        });
+
+        //Long click to delete alarm.
+        mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Delete")
+                        .setMessage("Do you want to delete this alarm ?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getApplicationContext(), "Delete Successful", Toast.LENGTH_SHORT);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getApplicationContext(), "Not Delete", Toast.LENGTH_SHORT);
+                            }
+                        })
+                        .show();
+
+                return false;
             }
         });
 
