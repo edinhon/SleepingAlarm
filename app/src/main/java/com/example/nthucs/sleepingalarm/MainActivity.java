@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -57,6 +60,18 @@ public class MainActivity extends AppCompatActivity
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
+
+        //Broadcast receiver
+        BroadcastReceiver AlarmReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle b = intent.getExtras();
+                if(b.get("msg").equals("ring_alarm")) {
+                    Toast.makeText(context, "Ring", Toast.LENGTH_LONG).show();
+                    ringAlarm();
+                }
+            }
+        };
 
         //Click Item to set alarm detail.
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,6 +215,20 @@ public class MainActivity extends AppCompatActivity
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+    }
+
+    public void ringAlarm(){
+        final View item = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog_ring_alarm, null);
+        new AlertDialog.Builder(MainActivity.this)
+            .setTitle("Alarm Ring")
+            .setView(item)
+            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //close voice;
+                }
+            })
+            .show();
     }
 
     @Override

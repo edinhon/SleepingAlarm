@@ -16,6 +16,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Bundle b = intent.getExtras();
         if(b.get("msg").equals("ring_alarm")) {
             Toast.makeText(context, "Ring", Toast.LENGTH_LONG).show();
+
+
         }
     }
 }
