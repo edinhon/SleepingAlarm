@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     ArrayAdapter adapter;
     TimePickerDialog timePickerDialog;
     FloatingActionButton addButton;
+    Alarm_Item_DBSet dbSet;
     //String timeBufffer = new String();
 
     @Override
@@ -40,6 +41,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // 建立資料庫物件
+        dbSet = new Alarm_Item_DBSet(getApplicationContext());
+
+        // 取得所有記事資料
+        alarmList = dbSet.getAll();
+        turnItemListToTextList();
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
@@ -87,8 +95,11 @@ public class MainActivity extends AppCompatActivity
                     else temp += " : 0" + minute;
                 }
                 alarmTimeList.add(temp);
+
                 Alarm_Item newAlarm = new Alarm_Item(hourOfDay, minute, temp);
+                newAlarm = dbSet.insert(newAlarm);
                 alarmList.add(newAlarm);
+
                 adapter.notifyDataSetChanged();
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
@@ -125,11 +136,19 @@ public class MainActivity extends AppCompatActivity
             alarmBeSet.setHour(alarmBundle.getInt("Hour"));
             alarmBeSet.setMinute(alarmBundle.getInt("Minute"));
             final boolean[] weekStart = alarmBundle.getBooleanArray("WeekStart");
+            alarmBeSet.setText(alarmBundle.getString("ShowTimeText"));
             for(int i = 0 ; i < 7 ; i++){
                 alarmBeSet.weekStart[i] = weekStart[i];
             }
+            dbSet.update(alarmBeSet);
             alarmTimeList.add(index, alarmBundle.getString("ShowTimeText"));
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void turnItemListToTextList(){
+        for(Alarm_Item a : alarmList){
+            alarmTimeList.add(a.getText());
         }
     }
 

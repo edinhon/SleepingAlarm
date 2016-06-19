@@ -135,8 +135,8 @@ public class Alarm_Item_DBSet {
     }
 
     // 讀取所有記事資料
-    public List<Alarm_Item> getAll() {
-        List<Alarm_Item> result = new ArrayList<>();
+    public ArrayList<Alarm_Item> getAll() {
+        ArrayList<Alarm_Item> result = new ArrayList<>();
         Cursor cursor = db.query(
                 TABLE_NAME, null, null, null, null, null, null, null);
 
