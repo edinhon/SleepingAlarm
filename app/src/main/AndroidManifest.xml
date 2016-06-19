@@ -19,7 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".NewAlarmActivity" />
-        <activity android:name=".SetRepeatActivity"></activity>
+        <activity android:name=".SetRepeatActivity" />
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="ring_alarm" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

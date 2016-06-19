@@ -1,6 +1,8 @@
 package com.example.nthucs.sleepingalarm;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -81,20 +83,24 @@ public class MainActivity extends AppCompatActivity
         //Long click to delete alarm.
         mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Delete")
                         .setMessage("Do you want to delete this alarm ?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "Delete Successful", Toast.LENGTH_SHORT);
+                                dbSet.delete(alarmList.get(position).getId());
+                                alarmList.remove(position);
+                                alarmTimeList.remove(position);
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(), "Delete Successful", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "Not Delete", Toast.LENGTH_SHORT);
+                                Toast.makeText(getApplicationContext(), "Not Delete", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .show();
@@ -129,6 +135,8 @@ public class MainActivity extends AppCompatActivity
                 alarmList.add(newAlarm);
 
                 adapter.notifyDataSetChanged();
+
+                newAlarmInSystem(hourOfDay, minute);
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
 
@@ -178,6 +186,20 @@ public class MainActivity extends AppCompatActivity
         for(Alarm_Item a : alarmList){
             alarmTimeList.add(a.getText());
         }
+    }
+
+    public void newAlarmInSystem(int hour, int minute){
+        Calendar cal = Calendar.getInstance();
+        // 設定於 3 分鐘後執行
+        cal.add(Calendar.SECOND, 10);
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("msg", "ring_alarm");
+
+        PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
     }
 
     @Override
