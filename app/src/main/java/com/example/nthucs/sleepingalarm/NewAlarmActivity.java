@@ -37,10 +37,10 @@ public class NewAlarmActivity extends AppCompatActivity {
         String temp = "";
         for(int i = 0 ; i < 7 ; i++){
             if(weekStart[i] && temp != ""){
-                temp += (", " + i);
+                temp += (", " + (i+1));
             }
             else if(weekStart[i] && temp == ""){
-                temp += i;
+                temp += (i+1);
             }
         }
         if(temp != "")repeatBeSet.setText(temp);
@@ -93,7 +93,7 @@ public class NewAlarmActivity extends AppCompatActivity {
             }
         });
 
-        Button setOK = (Button)findViewById(R.id.OKbutton2);
+        Button setOK = (Button)findViewById(R.id.OKbutton1);
         setOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,10 +130,10 @@ public class NewAlarmActivity extends AppCompatActivity {
             String temp = "";
             for(int i = 0 ; i < 7 ; i++){
                 if(weekStart[i] && temp != ""){
-                    temp += (", " + i);
+                    temp += (", " + (i+1));
                 }
                 else if(weekStart[i] && temp == ""){
-                    temp += i;
+                    temp += (i+1);
                 }
             }
             if(temp != "")repeatBeSet.setText(temp);

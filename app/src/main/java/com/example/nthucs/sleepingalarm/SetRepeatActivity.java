@@ -30,16 +30,10 @@ public class SetRepeatActivity extends AppCompatActivity {
             v.setItemChecked(i, weekStart[i]);
         }
 
-        v.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!weekStart[position]) weekStart[position] = true;
-                else weekStart[position] = false;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                weekStart[position] = !weekStart[position];
             }
         });
 

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
                 alarmBundle.putInt("Minute", chosenAlarm.getMinute());
                 alarmBundle.putBooleanArray("WeekStart", chosenAlarm.weekStart);
                 alarmBundle.putInt("Index", position);
-                alarmBundle.putString("ShowTimeText", alarmTimeList.get(position));
+                alarmBundle.putString("ShowTimeText", chosenAlarm.getText());
 
                 goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
 
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
                     else temp += " : 0" + minute;
                 }
                 alarmTimeList.add(temp);
-                Alarm_Item newAlarm = new Alarm_Item(hourOfDay, minute);
+                Alarm_Item newAlarm = new Alarm_Item(hourOfDay, minute, temp);
                 alarmList.add(newAlarm);
                 adapter.notifyDataSetChanged();
             }
