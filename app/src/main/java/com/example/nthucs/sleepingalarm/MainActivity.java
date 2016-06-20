@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dbSet.delete(alarmList.get(position).getId());
+                                removeAlarmInSystem(alarmList.get(position).getId());
                                 alarmList.remove(position);
                                 alarmTimeList.remove(position);
                                 adapter.notifyDataSetChanged();
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity
                         })
                         .show();
 
-                return false;
+                return true;
             }
         });
 
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
 
-                newAlarmInSystem(hourOfDay, minute);
+                newAlarmInSystem(hourOfDay, minute, newAlarm.getId());
 
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void newAlarmInSystem(int hour, int minute){
+    public void newAlarmInSystem(int hour, int minute, long id){
         Calendar cal = Calendar.getInstance();
         // 設定於 3 分鐘後執行
         cal.add(Calendar.SECOND, 5);
@@ -200,10 +201,20 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
 
-        PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_ONE_SHOT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+    }
+
+    public void removeAlarmInSystem(long id){
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("msg", "ring_alarm");
+
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        am.cancel(pi);
     }
 
     @Override
