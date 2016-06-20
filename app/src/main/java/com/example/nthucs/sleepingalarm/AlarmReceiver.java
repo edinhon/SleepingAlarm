@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
@@ -18,18 +19,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle b = intent.getExtras();
         if(b.get("msg").equals("ring_alarm")) {
-            Toast.makeText(context, "Ring", Toast.LENGTH_LONG).show();
-            /*final View item = LayoutInflater.from(context).inflate(R.layout.alert_dialog_ring_alarm, null);
-            new AlertDialog.Builder(context)
-                    .setTitle("Alarm Ring")
-                    .setView(item)
-                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //close voice;
-                        }
-                    })
-                    .show();*/
+            Intent goToRing = new Intent(context, RingAlarmDialogActivity.class);
+            goToRing.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(goToRing);
         }
     }
 }

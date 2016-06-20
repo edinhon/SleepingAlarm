@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity
     public void newAlarmInSystem(int hour, int minute){
         Calendar cal = Calendar.getInstance();
         // 設定於 3 分鐘後執行
-        cal.add(Calendar.SECOND, 10);
+        cal.add(Calendar.SECOND, 5);
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
