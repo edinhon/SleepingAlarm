@@ -4,7 +4,9 @@
     package="com.example.nthucs.sleepingalarm">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,8 +37,8 @@
 
         <activity
             android:name=".RingAlarmDialogActivity"
-            android:theme="@style/ThemeTransparent">
-        </activity>
+            android:theme="@style/ThemeTransparent"></activity>
+        <activity android:name=".MusicChooseActivity"></activity>
     </application>
 
 </manifest>

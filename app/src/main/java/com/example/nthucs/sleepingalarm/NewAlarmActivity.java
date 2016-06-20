@@ -17,6 +17,7 @@ public class NewAlarmActivity extends AppCompatActivity {
     String showTimeText;
     TextView timeBeSet;
     TextView repeatBeSet;
+    TextView ringBeSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class NewAlarmActivity extends AppCompatActivity {
         }
         if(temp != "")repeatBeSet.setText(temp);
         else repeatBeSet.setText("None Repeat");
+        ringBeSet = (TextView)findViewById(R.id.textRing);
 
         //Let click text to change alarm time.
         final TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -93,6 +95,17 @@ public class NewAlarmActivity extends AppCompatActivity {
 
                 goToSetRepeat.setClass(NewAlarmActivity.this, SetRepeatActivity.class);
                 NewAlarmActivity.this.startActivityForResult(goToSetRepeat, 0);
+            }
+        });
+
+        //Let click text to change rings.
+        ringBeSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToSetRings = new Intent();
+
+                goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
+                NewAlarmActivity.this.startActivity(goToSetRings);
             }
         });
 
