@@ -26,11 +26,15 @@ public class MusicChooseActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Choose Ring");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED) ){
+            Toast.makeText(MusicChooseActivity.this, "SDExist", Toast.LENGTH_SHORT).show();
+        }
 
 
         fileNames = new ArrayList<String>();
 
-        filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        filePath = Environment.getExternalStorageDirectory().getPath();
         Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_LONG).show();
         getUnderPathFiles();
 
@@ -43,20 +47,29 @@ public class MusicChooseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(fileNames.get(position).toString() == "Back to Previous"){
+                if (fileNames.get(position).toString() == "Back to Previous") {
                     backToPrevious();
                     adapter.notifyDataSetChanged();
-                }
-                else if(isDir(filePath + "/" + fileNames.get(position))){
+                } else if (isDir(filePath + "/" + fileNames.get(position))) {
                     goToNext(filePath + "/" + fileNames.get(position));
                     adapter.notifyDataSetChanged();
-                }
-                else{
+                } else {
                     Toast.makeText(MusicChooseActivity.this, filePath + "/" + fileNames.get(position), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
         });
+
+        /*fileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (isDir(filePath + '/' + fileNames.get(position)) && position != 0) {
+                    Toast.makeText(MusicChooseActivity.this, "True", Toast.LENGTH_SHORT).show();
+                }
+                else Toast.makeText(MusicChooseActivity.this, "False", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });*/
     }
 
     public boolean isDir(String p){
@@ -84,8 +97,7 @@ public class MusicChooseActivity extends AppCompatActivity {
         resetFileNames();
         filePath = p;
         getUnderPathFiles();
-        adapter.notifyDataSetChanged();
-        Toast.makeText(MusicChooseActivity.this, p, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_SHORT).show();
     }
 
     public void getUnderPathFiles(){
