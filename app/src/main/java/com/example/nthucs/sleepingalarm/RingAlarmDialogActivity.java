@@ -40,14 +40,12 @@ public class RingAlarmDialogActivity extends Activity {
         Toast.makeText(this, "Ring", Toast.LENGTH_LONG).show();
 
         //Let device vibrate.
-        /*final Vibrator vibrator = (Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
+        final Vibrator vibrator = (Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
         if(vibrator.hasVibrator()){
             vibrator.vibrate(new long[]{1000, 1000}, 0);
-        }*/
+        }
 
         //Play music.
-        //Bundle ringBundle = getIntent().getBundleExtra("RingBundle");
-        //String ringDataPath = ringBundle.getString("RingDataPath");
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
         Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
@@ -88,7 +86,7 @@ public class RingAlarmDialogActivity extends Activity {
                 .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //vibrator.cancel();
+                        vibrator.cancel();
                         mp.stop();
                         mp.release();
                         finish();

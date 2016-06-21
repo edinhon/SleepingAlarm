@@ -40,14 +40,28 @@ public class MusicChooseActivity extends AppCompatActivity {
 
         if(Environment.getExternalStorageState()
                 .equals(android.os.Environment.MEDIA_MOUNTED) ){
-            Toast.makeText(MusicChooseActivity.this, "SDExist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MusicChooseActivity.this, "SD card Exist", Toast.LENGTH_SHORT).show();
         }
 
 
         fileNames = new ArrayList<String>();
 
-        filePath = Environment.getExternalStorageDirectory().getPath();
-        Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_LONG).show();
+        Bundle ringBundle = getIntent().getBundleExtra("RingBundle");
+        String ringDataPath = ringBundle.getString("RingDataPath");
+        if(ringDataPath != null && !ringDataPath.equals("")){
+            String temp2 = ringDataPath;
+            char[] temp = ringDataPath.toCharArray();
+            int endP = temp.length;
+            for(int i = temp.length-1 ; i >= 0 ; i--){
+                if(temp[i] == '/'){
+                    endP = i;
+                    break;
+                }
+            }
+            filePath = temp2.substring(0, endP);
+        }else {
+            filePath = Environment.getExternalStorageDirectory().getPath();
+        }
         getUnderPathFiles();
 
         ListView fileList = (ListView)findViewById(R.id.dataList);

@@ -205,11 +205,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
 
-        /*Bundle ringBundle = new Bundle();
-        ringBundle.putString("RingDataPath", ringDataPath);
-        intent.putExtra("RingBundle", ringBundle);*/
         intent.putExtra("RingDataPath", ringDataPath);
-        Toast.makeText(MainActivity.this, intent.getExtras().getString("RingDataPath"), Toast.LENGTH_SHORT).show();
 
         PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -37,22 +37,25 @@ public class NewAlarmActivity extends AppCompatActivity {
         ringDataPath = alarmBundle.getString("RingDataPath");
 
         //Set TextView by argument.
+        //Set time text.
         timeBeSet = (TextView)findViewById(R.id.textTime);
         timeBeSet.setText(showTimeText);
+        //Set repeat text
         repeatBeSet = (TextView)findViewById(R.id.textRepeat);
         String temp = "";
         for(int i = 0 ; i < 7 ; i++){
-            if(weekStart[i] && temp != ""){
+            if(weekStart[i] && !temp.equals("")){
                 temp += (", " + (i+1));
             }
-            else if(weekStart[i] && temp == ""){
+            else if(weekStart[i] && temp.equals("")){
                 temp += (i+1);
             }
         }
-        if(temp != "")repeatBeSet.setText(temp);
+        if(!temp.equals(""))repeatBeSet.setText(temp);
         else repeatBeSet.setText("None Repeat");
+        //Set ring text.
         ringBeSet = (TextView)findViewById(R.id.textRing);
-        String temp2 = "";
+        String temp2;
         char[] tempCA = ringDataPath.toCharArray();
         int startP = 0;
         if(tempCA.length != 0){
@@ -64,6 +67,7 @@ public class NewAlarmActivity extends AppCompatActivity {
             }
             temp2 = ringDataPath.substring(startP+1, tempCA.length);
         }
+        else temp2 = "default ring";
         ringBeSet.setText(temp2);
 
         //Let click text to change alarm time.
@@ -167,14 +171,14 @@ public class NewAlarmActivity extends AppCompatActivity {
             repeatBeSet = (TextView)findViewById(R.id.textRepeat);
             String temp = "";
             for(int i = 0 ; i < 7 ; i++){
-                if(weekStart[i] && temp != ""){
+                if(weekStart[i] && !temp .equals("")){
                     temp += (", " + (i+1));
                 }
-                else if(weekStart[i] && temp == ""){
+                else if(weekStart[i] && temp.equals("")){
                     temp += (i+1);
                 }
             }
-            if(temp != "")repeatBeSet.setText(temp);
+            if(!temp.equals(""))repeatBeSet.setText(temp);
             else repeatBeSet.setText("None Repeat");
         }
 

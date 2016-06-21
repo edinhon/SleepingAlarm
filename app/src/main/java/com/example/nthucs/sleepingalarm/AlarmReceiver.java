@@ -27,12 +27,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         if(b.get("msg").equals("ring_alarm")) {
             Intent goToRing = new Intent(context, RingAlarmDialogActivity.class);
 
-            //Bundle ringBundle = new Bundle();
             String ringDataPath = intent.getExtras().getString("RingDataPath");
-            //ringBundle.putString("RingDataPath", ringDataPath);
-            //goToRing.putExtra("RingBundle", ringBundle);
             goToRing.putExtra("RingDataPath", ringDataPath);
-            Toast.makeText(context, ringDataPath, Toast.LENGTH_LONG).show();
 
             goToRing.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(goToRing);
