@@ -49,7 +49,7 @@ public class RingAlarmDialogActivity extends Activity {
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
         Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
-        if(ringDataPath != ""){
+        if(ringDataPath != null && !ringDataPath.equals("")){
             mp = new MediaPlayer();
             try {
                 verifyStoragePermissions(RingAlarmDialogActivity.this);

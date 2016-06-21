@@ -44,7 +44,7 @@ public class MusicChooseActivity extends AppCompatActivity {
         }
 
 
-        fileNames = new ArrayList<String>();
+        fileNames = new ArrayList<>();
 
         Bundle ringBundle = getIntent().getBundleExtra("RingBundle");
         String ringDataPath = ringBundle.getString("RingDataPath");
@@ -65,7 +65,7 @@ public class MusicChooseActivity extends AppCompatActivity {
         getUnderPathFiles();
 
         ListView fileList = (ListView)findViewById(R.id.dataList);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fileNames);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, fileNames);
         fileList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -99,8 +99,7 @@ public class MusicChooseActivity extends AppCompatActivity {
 
     public boolean isDir(String p){
         File file = new File(p);
-        if(file.isDirectory()) return true;
-        else return false;
+        return file.isDirectory();
     }
 
     public void backToPrevious(){
