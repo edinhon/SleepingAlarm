@@ -22,6 +22,7 @@ public class Alarm_Item_DBSet {
     public static final String HOUR_COLUMN = "hour";
     public static final String MINUTE_COLUMN = "minute";
     public static final String TEXT_COLUMN = "text";
+    public static final String RING_DATA_PATH_COLUMN = "ringDataPath";
     public static final String MONDAY_COLUMN = "Monday";
     public static final String TUESDAY_COLUMN = "Tuesday";
     public static final String WEDNESDAY_COLUMN = "Wednesday";
@@ -37,6 +38,7 @@ public class Alarm_Item_DBSet {
                     HOUR_COLUMN + " INTEGER NOT NULL, " +
                     MINUTE_COLUMN + " INTEGER NOT NULL, " +
                     TEXT_COLUMN + " TEXT NOT NULL, " +
+                    RING_DATA_PATH_COLUMN + " TEXT NOT NULL, " +
                     MONDAY_COLUMN + " INTEGER NOT NULL, " +
                     TUESDAY_COLUMN + " INTEGER NOT NULL, " +
                     WEDNESDAY_COLUMN + " INTEGER NOT NULL, " +
@@ -68,6 +70,7 @@ public class Alarm_Item_DBSet {
         cv.put(HOUR_COLUMN, item.getHour());
         cv.put(MINUTE_COLUMN, item.getMinute());
         cv.put(TEXT_COLUMN, item.getText());
+        cv.put(RING_DATA_PATH_COLUMN, item.getRingPath());
         if(item.weekStart[0]) cv.put(MONDAY_COLUMN, 1);
         else cv.put(MONDAY_COLUMN, 0);
         if(item.weekStart[1]) cv.put(TUESDAY_COLUMN, 1);
@@ -103,6 +106,7 @@ public class Alarm_Item_DBSet {
         cv.put(HOUR_COLUMN, item.getHour());
         cv.put(MINUTE_COLUMN, item.getMinute());
         cv.put(TEXT_COLUMN, item.getText());
+        cv.put(RING_DATA_PATH_COLUMN, item.getRingPath());
         if(item.weekStart[0]) cv.put(MONDAY_COLUMN, 1);
         else cv.put(MONDAY_COLUMN, 0);
         if(item.weekStart[1]) cv.put(TUESDAY_COLUMN, 1);
@@ -179,19 +183,20 @@ public class Alarm_Item_DBSet {
         result.setHour(cursor.getInt(1));
         result.setMinute(cursor.getInt(2));
         result.setText(cursor.getString(3));
-        if(cursor.getInt(4) == 1) result.weekStart[0] = true;
+        result.setRingPath(cursor.getString(4));
+        if(cursor.getInt(5) == 1) result.weekStart[0] = true;
         else result.weekStart[0] = false;
-        if(cursor.getInt(5) == 1) result.weekStart[1] = true;
+        if(cursor.getInt(6) == 1) result.weekStart[1] = true;
         else result.weekStart[1] = false;
-        if(cursor.getInt(6) == 1) result.weekStart[2] = true;
+        if(cursor.getInt(7) == 1) result.weekStart[2] = true;
         else result.weekStart[2] = false;
-        if(cursor.getInt(7) == 1) result.weekStart[3] = true;
+        if(cursor.getInt(8) == 1) result.weekStart[3] = true;
         else result.weekStart[3] = false;
-        if(cursor.getInt(8) == 1) result.weekStart[4] = true;
+        if(cursor.getInt(9) == 1) result.weekStart[4] = true;
         else result.weekStart[4] = false;
-        if(cursor.getInt(9) == 1) result.weekStart[5] = true;
+        if(cursor.getInt(10) == 1) result.weekStart[5] = true;
         else result.weekStart[5] = false;
-        if(cursor.getInt(10) == 1) result.weekStart[6] = true;
+        if(cursor.getInt(11) == 1) result.weekStart[6] = true;
         else result.weekStart[6] = false;
 
         // 回傳結果

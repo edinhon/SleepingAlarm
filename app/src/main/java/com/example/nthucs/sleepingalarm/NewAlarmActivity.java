@@ -67,7 +67,7 @@ public class NewAlarmActivity extends AppCompatActivity {
             }
             temp2 = ringDataPath.substring(startP+1, tempCA.length);
         }
-        else temp2 = "default ring";
+        else temp2 = "Default Ring";
         ringBeSet.setText(temp2);
 
         //Let click text to change alarm time.

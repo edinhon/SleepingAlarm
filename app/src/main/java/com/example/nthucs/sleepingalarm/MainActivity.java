@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.telecom.Call;
+import android.util.Log;
+import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -198,9 +201,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void newAlarmInSystem(int hour, int minute, long id, String ringDataPath){
-        Calendar cal = Calendar.getInstance();
-        // 設定於 15s 後執行
-        cal.add(Calendar.SECOND, 5);
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
+        if (minute < currentMinute) {
+            --hour;
+            minute = minute - currentMinute + 60;
+            hour = hour - currentHour;
+        }
+        else {
+            minute = minute - currentMinute;
+            hour = hour - currentHour;
+        }
+        if (hour < 0) {
+            hour += 24;
+        }
+        Toast.makeText(MainActivity.this, "Alarm will ring after" + hour + "hr" + minute + "min", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
@@ -210,7 +227,9 @@ public class MainActivity extends AppCompatActivity
         PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+        long nowTime = calendar.getTimeInMillis();
+        nowTime = calendar.getTimeInMillis() - (nowTime%60000);
+        am.set(AlarmManager.RTC_WAKEUP, nowTime + (hour * 60 + minute) * 60 * 1000, pi);
     }
 
     public void removeAlarmInSystem(long id){
