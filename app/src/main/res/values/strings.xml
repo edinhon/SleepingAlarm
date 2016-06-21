@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="batchRequest">Connect with Facebook</string>
+    <string name="facebook_app_id">1035504589862157</string>
+
     <string name="app_name">SleepingAlarm</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
