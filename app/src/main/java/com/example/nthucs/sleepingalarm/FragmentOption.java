@@ -101,7 +101,7 @@ public class FragmentOption extends Fragment {
         });
 
         //Set vibrate.
-        
+
 
         return view;
     }
