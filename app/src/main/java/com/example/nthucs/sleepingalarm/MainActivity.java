@@ -209,9 +209,9 @@ public class MainActivity extends AppCompatActivity
         ringBundle.putString("RingDataPath", ringDataPath);
         intent.putExtra("RingBundle", ringBundle);*/
         intent.putExtra("RingDataPath", ringDataPath);
-        Toast.makeText(MainActivity.this, intent.getExtras().getString("RingDataPath"), Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, intent.getExtras().getString("RingDataPath"), Toast.LENGTH_SHORT).show();
 
-        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
 
-        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.cancel(pi);

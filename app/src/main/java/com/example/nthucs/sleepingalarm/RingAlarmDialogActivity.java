@@ -49,15 +49,21 @@ public class RingAlarmDialogActivity extends Activity {
         //Bundle ringBundle = getIntent().getBundleExtra("RingBundle");
         //String ringDataPath = ringBundle.getString("RingDataPath");
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
-        //Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
         if(ringDataPath != ""){
             mp = new MediaPlayer();
             try {
                 verifyStoragePermissions(RingAlarmDialogActivity.this);
                 mp.setDataSource(ringDataPath);
-                mp.start();
-                mp.setLooping(true);
+                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer player) {
+                        player.start();
+                        player.setLooping(true);
+                    }
+                });
+                mp.prepareAsync();
             } catch (IOException e) {
                 e.printStackTrace();
                 mp = MediaPlayer.create(this, R.raw.shot);
