@@ -15,6 +15,7 @@ public class NewAlarmActivity extends AppCompatActivity {
     int hour, minute;
     boolean[] weekStart;
     String showTimeText;
+    String ringDataPath;
     TextView timeBeSet;
     TextView repeatBeSet;
     TextView ringBeSet;
@@ -33,6 +34,7 @@ public class NewAlarmActivity extends AppCompatActivity {
         minute = alarmBundle.getInt("Minute");
         weekStart = alarmBundle.getBooleanArray("WeekStart");
         showTimeText = alarmBundle.getString("ShowTimeText");
+        ringDataPath = alarmBundle.getString("RingDataPath");
 
         //Set TextView by argument.
         timeBeSet = (TextView)findViewById(R.id.textTime);
@@ -50,6 +52,19 @@ public class NewAlarmActivity extends AppCompatActivity {
         if(temp != "")repeatBeSet.setText(temp);
         else repeatBeSet.setText("None Repeat");
         ringBeSet = (TextView)findViewById(R.id.textRing);
+        String temp2 = "";
+        char[] tempCA = ringDataPath.toCharArray();
+        int startP = 0;
+        if(tempCA.length != 0){
+            for(int i = tempCA.length-1 ; i >= 0 ; i--){
+                if(tempCA[i] == '/'){
+                    startP = i;
+                    break;
+                }
+            }
+            temp2 = ringDataPath.substring(startP+1, tempCA.length);
+        }
+        ringBeSet.setText(temp2);
 
         //Let click text to change alarm time.
         final TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -104,8 +119,13 @@ public class NewAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent goToSetRings = new Intent();
 
+                Bundle ringBundle = new Bundle();
+                ringBundle.putString("RingDataPath", ringDataPath);
+
+                goToSetRings.putExtra("RingBundle", ringBundle);
+
                 goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
-                NewAlarmActivity.this.startActivity(goToSetRings);
+                NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
             }
         });
 
@@ -121,6 +141,7 @@ public class NewAlarmActivity extends AppCompatActivity {
                 returnBundle.putInt("Minute", minute);
                 returnBundle.putBooleanArray("WeekStart", weekStart);
                 returnBundle.putString("ShowTimeText", showTimeText);
+                returnBundle.putString("RingDataPath", ringDataPath);
 
                 //取出上一個Activity傳過來的 Intent 物件。
                 Intent intent = getIntent();
@@ -136,7 +157,8 @@ public class NewAlarmActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
+        //Set repeat successful
+        if (resultCode == Activity.RESULT_OK && requestCode == 0) {
             //將包裹從 Intent 中取出。
             Bundle weekBundle = data.getBundleExtra("WeekBundle");
             //將回傳值用指定的 key 取出
@@ -154,6 +176,28 @@ public class NewAlarmActivity extends AppCompatActivity {
             }
             if(temp != "")repeatBeSet.setText(temp);
             else repeatBeSet.setText("None Repeat");
+        }
+
+        //Set ring successful
+        else if(resultCode == Activity.RESULT_OK && requestCode == 1){
+            Bundle ringBundle = data.getBundleExtra("RingBundle");
+            //將回傳值用指定的 key 取出
+            ringDataPath = ringBundle.getString("RingDataPath");
+
+            ringBeSet = (TextView)findViewById(R.id.textRing);
+            String temp = "";
+            char[] tempCA = ringDataPath.toCharArray();
+            int startP = 0;
+            if(tempCA.length != 0){
+                for(int i = tempCA.length-1 ; i >= 0 ; i--){
+                    if(tempCA[i] == '/'){
+                        startP = i;
+                        break;
+                    }
+                }
+                temp = ringDataPath.substring(startP+1, tempCA.length);
+            }
+            ringBeSet.setText(temp);
         }
     }
 

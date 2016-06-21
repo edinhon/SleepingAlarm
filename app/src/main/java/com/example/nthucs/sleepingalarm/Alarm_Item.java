@@ -10,11 +10,13 @@ public class Alarm_Item {
     private String showTimeText;
     private long id;
     public boolean[] weekStart = new boolean[7];
+    public String ringDataPath;
 
     public Alarm_Item(int hrInput, int minInput, String text){
         setHour(hrInput);
         setMinute(minInput);
         setText(text);
+        ringDataPath = "";
         for(int i = 0 ; i < 7 ; i++){
             weekStart[i] = false;
         }
@@ -50,5 +52,13 @@ public class Alarm_Item {
 
     public String getText(){
         return showTimeText;
+    }
+
+    public void setRingPath(String ringInput){
+        ringDataPath = ringInput;
+    }
+
+    public String getRingPath(){
+        return ringDataPath;
     }
 }

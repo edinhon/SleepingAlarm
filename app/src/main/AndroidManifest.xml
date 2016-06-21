@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission  android:name="android.permission.SEND_SMS"/>
+    <uses-permission  android:name="android.permission.RECEIVE_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -28,10 +31,10 @@
         <activity android:name=".SetRepeatActivity" />
 
         <receiver
-            android:name=".AlarmReceiver"
-            tools:ignore="ExportedReceiver">
+            android:name=".AlarmReceiver">
             <intent-filter>
                 <action android:name="ring_alarm" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
 

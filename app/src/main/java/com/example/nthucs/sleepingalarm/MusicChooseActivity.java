@@ -1,9 +1,15 @@
 package com.example.nthucs.sleepingalarm;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +24,12 @@ public class MusicChooseActivity extends AppCompatActivity {
     ArrayList<String> fileNames;
     ArrayAdapter adapter;
     String filePath;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,29 +59,28 @@ public class MusicChooseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (fileNames.get(position).toString() == "Back to Previous") {
+                if (fileNames.get(position).equals("Back to Previous")) {
                     backToPrevious();
                     adapter.notifyDataSetChanged();
                 } else if (isDir(filePath + "/" + fileNames.get(position))) {
                     goToNext(filePath + "/" + fileNames.get(position));
                     adapter.notifyDataSetChanged();
                 } else {
+                    Bundle ringBundle = new Bundle();
+                    ringBundle.putString("RingDataPath", filePath + "/" + fileNames.get(position));
+
+                    Intent intent = getIntent();
+                    //放入要回傳的包裹。
+                    intent.putExtra("RingBundle", ringBundle);
+
+                    //設定回傳狀態。
+                    setResult(Activity.RESULT_OK, intent);
                     Toast.makeText(MusicChooseActivity.this, filePath + "/" + fileNames.get(position), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
         });
 
-        /*fileList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (isDir(filePath + '/' + fileNames.get(position)) && position != 0) {
-                    Toast.makeText(MusicChooseActivity.this, "True", Toast.LENGTH_SHORT).show();
-                }
-                else Toast.makeText(MusicChooseActivity.this, "False", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });*/
     }
 
     public boolean isDir(String p){
@@ -90,17 +101,18 @@ public class MusicChooseActivity extends AppCompatActivity {
         }
         filePath = filePath.substring(0, endP);
         getUnderPathFiles();
-        Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_SHORT).show();
     }
 
     public void goToNext(String p){
         resetFileNames();
         filePath = p;
         getUnderPathFiles();
-        Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MusicChooseActivity.this, filePath, Toast.LENGTH_SHORT).show();
     }
 
     public void getUnderPathFiles(){
+        verifyStoragePermissions(MusicChooseActivity.this);
         File file = new File(filePath);
         File[] files = file.listFiles();
 
@@ -117,5 +129,30 @@ public class MusicChooseActivity extends AppCompatActivity {
 
     public void resetFileNames(){
         fileNames.clear();
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

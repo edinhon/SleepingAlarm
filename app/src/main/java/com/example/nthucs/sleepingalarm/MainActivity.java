@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity
                 alarmBundle.putBooleanArray("WeekStart", chosenAlarm.weekStart);
                 alarmBundle.putInt("Index", position);
                 alarmBundle.putString("ShowTimeText", chosenAlarm.getText());
+                alarmBundle.putString("RingDataPath", chosenAlarm.getRingPath());
 
                 goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
 
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
                 adapter.notifyDataSetChanged();
 
-                newAlarmInSystem(hourOfDay, minute, newAlarm.getId());
+                newAlarmInSystem(hourOfDay, minute, newAlarm.getId(), newAlarm.getRingPath());
 
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
@@ -181,9 +182,12 @@ public class MainActivity extends AppCompatActivity
             for(int i = 0 ; i < 7 ; i++){
                 alarmBeSet.weekStart[i] = weekStart[i];
             }
+            alarmBeSet.setRingPath(alarmBundle.getString("RingDataPath"));
             dbSet.update(alarmBeSet);
             alarmTimeList.add(index, alarmBundle.getString("ShowTimeText"));
             adapter.notifyDataSetChanged();
+            removeAlarmInSystem(alarmBeSet.getId());
+            newAlarmInSystem(alarmBeSet.getHour(), alarmBeSet.getMinute(), alarmBeSet.getId(), alarmBeSet.getRingPath());
         }
     }
 
@@ -193,13 +197,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void newAlarmInSystem(int hour, int minute, long id){
+    public void newAlarmInSystem(int hour, int minute, long id, String ringDataPath){
         Calendar cal = Calendar.getInstance();
-        // 設定於 3 分鐘後執行
+        // 設定於 15s 後執行
         cal.add(Calendar.SECOND, 5);
 
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
+
+        /*Bundle ringBundle = new Bundle();
+        ringBundle.putString("RingDataPath", ringDataPath);
+        intent.putExtra("RingBundle", ringBundle);*/
+        intent.putExtra("RingDataPath", ringDataPath);
+        Toast.makeText(MainActivity.this, intent.getExtras().getString("RingDataPath"), Toast.LENGTH_LONG).show();
 
         PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_ONE_SHOT);
 
