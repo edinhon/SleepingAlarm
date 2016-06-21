@@ -9,7 +9,7 @@
         android:id="@+id/loud"
         android:layout_width="120dp"
         android:layout_height="40dp"
-        android:text="音量"
+        android:text="Volume"
         android:textSize="25dp"
         android:gravity="center_vertical|center_horizontal" />
     <SeekBar
@@ -24,7 +24,7 @@
         android:id="@+id/vibration"
         android:layout_width="120dp"
         android:layout_height="40dp"
-        android:text="震動"
+        android:text="Vibrate"
         android:textSize="25dp"
         android:gravity="center_vertical|center_horizontal"
         android:layout_below="@+id/loud"

@@ -3,8 +3,10 @@ package com.example.nthucs.sleepingalarm;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
@@ -49,8 +51,13 @@ public class RingAlarmDialogActivity extends Activity {
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
         Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
+        setVolumeControlStream(AudioManager.STREAM_ALARM);
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        am.setMode(AudioManager.MODE_NORMAL);
+
         if(ringDataPath != null && !ringDataPath.equals("")){
             mp = new MediaPlayer();
+            mp.setAudioStreamType(AudioManager.STREAM_ALARM);
             try {
                 verifyStoragePermissions(RingAlarmDialogActivity.this);
                 mp.setDataSource(ringDataPath);

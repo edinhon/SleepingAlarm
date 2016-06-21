@@ -2,13 +2,16 @@ package com.example.nthucs.sleepingalarm;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ public class FragmentOption extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Switch mySwitch;
     private TextView switchStatus;
+    AudioManager am;
 
     public FragmentOption(){}
 
@@ -32,6 +36,8 @@ public class FragmentOption extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         /*switchStatus = (TextView) findViewById(R.id.switchStatus);
         mySwitch = (Switch) findViewById(R.id.vibration_switch);
@@ -66,8 +72,38 @@ public class FragmentOption extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        View view = inflater.inflate(R.layout.fragment_option, container, false);
 
-        return inflater.inflate(R.layout.fragment_option, container, false);
+        //Set volume.
+        getActivity().setVolumeControlStream(AudioManager.STREAM_ALARM);
+
+        am = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
+
+        SeekBar sb = (SeekBar)view.findViewById(R.id.loud_value);
+        sb.setMax(am.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+        sb.setProgress(am.getStreamVolume(AudioManager.STREAM_ALARM));
+
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                am.setStreamVolume(AudioManager.STREAM_ALARM, progress, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //Set vibrate.
+        
+
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
