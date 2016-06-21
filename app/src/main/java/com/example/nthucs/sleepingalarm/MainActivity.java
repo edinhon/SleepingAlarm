@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
@@ -298,31 +299,57 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment =null;
+        Fragment fragment = null;
         if (id == R.id.nav_login) {
-            // Handle the camera action
 
             fragment= new FragmentLogin();
+            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            f.setVisibility(View.VISIBLE);
+            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            mainList.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
 
+        } else if(id == R.id.nav_home){
+
+            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            f.setVisibility(View.GONE);
+            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            mainList.setVisibility(View.VISIBLE);
+            addButton.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_shop) {
 
             fragment= new FragmentShop();
-
+            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            f.setVisibility(View.VISIBLE);
+            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            mainList.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
 
         } else if (id == R.id.nav_option) {
 
             fragment= new FragmentOption();
-
+            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            f.setVisibility(View.VISIBLE);
+            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            mainList.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
 
         } else if (id == R.id.nav_manage) {
 
             fragment= new FragmentShop();
+            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            f.setVisibility(View.VISIBLE);
+            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            mainList.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
         }
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, fragment);
-        ft.commit();
+        if (ft != null && fragment != null) {
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
