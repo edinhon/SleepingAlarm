@@ -34,7 +34,6 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -54,9 +53,6 @@ public class MainActivity extends AppCompatActivity
     TimePickerDialog timePickerDialog;
     FloatingActionButton addButton;
     Alarm_Item_DBSet dbSet;
-    Parameter_DBSet p_dbSet;
-    ArrayList<Parameter> parameterList = new ArrayList<>();
-    Parameter parameter;
 
     public CallbackManager callbackManager;
 
@@ -73,29 +69,13 @@ public class MainActivity extends AppCompatActivity
 
         // 建立資料庫物件
         dbSet = new Alarm_Item_DBSet(getApplicationContext());
-        p_dbSet = new Parameter_DBSet(getApplicationContext());
 
         // 取得所有記事資料
         alarmList = dbSet.getAll();
         turnItemListToTextList();
-        //If new application, create a new Parameter.
-        if(p_dbSet.getCount() == 0){
-            parameter = new Parameter(100, 0, 0);
-            parameter = p_dbSet.insert(parameter);
-            parameterList = p_dbSet.getAll();
-        }
-        //If not a new app, get Parameter.
-        else {
-            parameterList = p_dbSet.getAll();
-            for(Parameter p : parameterList){
-                parameter = p;
-            }
-        }
-        TextView m = (TextView)findViewById(R.id.textView2);
-        m.setText(Integer.toString(parameter.getMoney()));
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alarmTimeList);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
 
         //Click Item to set alarm detail.
@@ -152,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         //New a alarm.
-        final GregorianCalendar calendar = new GregorianCalendar();
+        GregorianCalendar calendar = new GregorianCalendar();
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -181,14 +161,12 @@ public class MainActivity extends AppCompatActivity
                 newAlarmInSystem(hourOfDay, minute, newAlarm.getId(), newAlarm.getRingPath());
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY), false);
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
 
         addButton = (FloatingActionButton) findViewById(R.id.fab);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePickerDialog.updateTime(GregorianCalendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                        GregorianCalendar.getInstance().get(Calendar.MINUTE));
                 timePickerDialog.show();
                 adapter.notifyDataSetChanged();
             }
@@ -344,13 +322,18 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_shop) {
 
+            Intent i = new Intent();
+            i.setClass(MainActivity.this,ShopActivity.class);
+            startActivity(i);
+
+            /*
             fragment= new FragmentShop();
             FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
             f.setVisibility(View.VISIBLE);
             ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
-
+            */
         } else if (id == R.id.nav_option) {
 
             fragment= new FragmentOption();
@@ -360,7 +343,7 @@ public class MainActivity extends AppCompatActivity
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
 
-        } else if (id == R.id.nav_manage) {
+        } /*else if (id == R.id.nav_manage) {
 
             fragment= new FragmentShop();
             FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
@@ -368,7 +351,7 @@ public class MainActivity extends AppCompatActivity
             ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
-        }
+        }*/
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (ft != null && fragment != null) {

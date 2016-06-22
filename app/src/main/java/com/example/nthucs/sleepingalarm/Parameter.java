@@ -11,13 +11,6 @@ public class Parameter {
     private int numberRingTicket;
     private long id;
 
-    public Parameter(int m, int ntt, int nrt){
-        setMoney(m);
-        setNumberTimeTicket(ntt);
-        setNumberRingTicket(nrt);
-        setVibratable(true);
-    }
-
     public void setVibratable(boolean input){
         vibratable = input;
     }

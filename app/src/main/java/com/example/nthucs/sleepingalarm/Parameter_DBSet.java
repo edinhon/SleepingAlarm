@@ -138,7 +138,7 @@ public class Parameter_DBSet {
     // 把Cursor目前的資料包裝為物件
     public Parameter getRecord(Cursor cursor) {
         // 準備回傳結果用的物件
-        Parameter result = new Parameter(0, 0, 0);
+        Parameter result = new Parameter();
 
         result.setId(cursor.getLong(0));
         if(cursor.getInt(1) == 1) result.setVibratable(true);

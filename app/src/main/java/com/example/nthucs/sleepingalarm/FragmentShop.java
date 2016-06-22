@@ -2,10 +2,14 @@ package com.example.nthucs.sleepingalarm;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +27,8 @@ public class FragmentShop extends Fragment {
     private OnFragmentInteractionListener mListener;
     private PagerAdapterItem mpagerAdapterItem;
 
+    ViewPager pager;
+    TabLayout tabLayout;
     public FragmentShop(){}
 
     public static FragmentShop newInstance() {
@@ -35,30 +41,36 @@ public class FragmentShop extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialisepage();
+
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private void initialisepage(){
-
-        List<Fragment> fragments = new Vector<Fragment>();
-
-        fragments.add(Fragment.instantiate(this.getContext(),Item1.class.getName()));
-        fragments.add(Fragment.instantiate(this.getContext(),Item2.class.getName()));
-
-        /*mpagerAdapterItem = new PagerAdapterItem(this.getFragmentManager(),fragments);
-        ViewPager pager = (ViewPager) this.getActivity().findViewById(R.id.ItemView);
-        pager.setAdapter(mpagerAdapterItem);*/
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        initialisepage();
+        /*pager= (ViewPager) this.getActivity().findViewById(R.id.ItemView);
+        tabLayout= (TabLayout) this.getActivity().findViewById(R.id.tab_layout);
 
+        // Fragment manager to add fragment in viewpager we will pass object of Fragment manager to adpater class.
+        android.support.v4.app.FragmentManager manager = getChildFragmentManager();
 
+        //object of PagerAdapter passing fragment manager object as a parameter of constructor of PagerAdapter class.
+        PagerAdapterItem adapter=new PagerAdapterItem(manager);
+
+        //set Adapter to view pager
+        pager.setAdapter(adapter);
+
+        //set tablayout with viewpager
+        tabLayout.setupWithViewPager(pager);
+
+        // adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        //Setting tabs from adpater
+        tabLayout.setTabsFromPagerAdapter(adapter);
+        */
         return inflater.inflate(R.layout.fragment_shop, container, false);
     }
 
