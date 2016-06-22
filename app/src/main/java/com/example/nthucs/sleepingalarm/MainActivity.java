@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
                 goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
 
                 goToSetExistedAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
-                MainActivity.this.startActivityForResult(goToSetExistedAlarm, 0);
+                MainActivity.this.startActivityForResult(goToSetExistedAlarm, 1);
             }
         });
 
@@ -214,10 +214,11 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             //將包裹從 Intent 中取出。
             Bundle alarmBundle = data.getBundleExtra("ReturnBundle");
             //將回傳值用指定的 key 取出
+
             final int index = alarmBundle.getInt("Index");
             Alarm_Item alarmBeSet = alarmList.get(index);
             alarmTimeList.remove(index);
