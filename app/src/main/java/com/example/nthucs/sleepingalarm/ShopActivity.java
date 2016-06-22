@@ -16,6 +16,7 @@ public class ShopActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
     private ArrayList<View> viewList;
+    private ArrayList<String> stringList;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -38,7 +39,7 @@ public class ShopActivity extends FragmentActivity {
         mViewPager.setCurrentItem(0);
 
         final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
