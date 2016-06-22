@@ -545,15 +545,7 @@ public class MainActivity extends AppCompatActivity
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
 
-        } /*else if (id == R.id.nav_manage) {
-
-            fragment= new FragmentShop();
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
-            f.setVisibility(View.VISIBLE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
-            mainList.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
-        }*/
+        }
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (ft != null && fragment != null) {

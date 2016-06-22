@@ -9,7 +9,7 @@
         <item
             android:id="@+id/nav_login"
             android:icon="@drawable/ic_menu_login"
-            android:title="Log In" />
+            android:title="Log In FB" />
         <item
             android:id="@+id/nav_shop"
             android:icon="@drawable/ic_menu_shop"
@@ -18,10 +18,6 @@
             android:id="@+id/nav_option"
             android:icon="@drawable/ic_menu_option"
             android:title="Option" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
     </group>
 
 

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -100,7 +102,6 @@ public class FragmentLogin extends Fragment {
                                     if (object.has("picture")) {
                                         String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                         Picasso.with(getActivity()).load(profilePicUrl).into(userPhoto);
-
                                     }
                                     Log.d("email", email);
                                     Log.d("bir", birthday);
