@@ -1,6 +1,8 @@
 package com.example.nthucs.sleepingalarm;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -116,9 +118,11 @@ public class ShopActivity extends FragmentActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (whichone == 1) {
                             money -= PRICE_T;
+                            numberTimeTicket++;
                             Toast.makeText(ShopActivity.this, "Buy first", Toast.LENGTH_SHORT).show();
                         } else {
                             money -= PRICE_R;
+                            numberRingTicket++;
                             Toast.makeText(ShopActivity.this, "Buy second", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -143,6 +147,26 @@ public class ShopActivity extends FragmentActivity {
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        //建立包裹，放入回傳值。
+        Bundle parameterBundle = new Bundle();
+        parameterBundle.putInt("Money", money);
+        parameterBundle.putInt("NumberTimeTicket", numberTimeTicket);
+        parameterBundle.putInt("NumberRingTicket", numberRingTicket);
+
+        //取出上一個Activity傳過來的 Intent 物件。
+        Intent intent = getIntent();
+        //放入要回傳的包裹。
+        intent.putExtra("ParameterBundle", parameterBundle);
+
+        //設定回傳狀態。
+        setResult(Activity.RESULT_OK, intent);
+
+        super.onBackPressed();  // optional depending on your needs
     }
 
 }

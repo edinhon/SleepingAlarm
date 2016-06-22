@@ -235,6 +235,17 @@ public class MainActivity extends AppCompatActivity
             adapter.notifyDataSetChanged();
             removeAlarmInSystem(alarmBeSet.getId());
             newAlarmInSystem(alarmBeSet.getHour(), alarmBeSet.getMinute(), alarmBeSet.getId(), alarmBeSet.getRingPath());
+        } else if(resultCode == Activity.RESULT_OK && requestCode == 2){
+
+            Bundle parameterBundle = data.getBundleExtra("ParameterBundle");
+            parameter.setMoney(parameterBundle.getInt("Money"));
+            parameter.setNumberTimeTicket(parameterBundle.getInt("NumberTimeTicket"));
+            parameter.setNumberRingTicket(parameterBundle.getInt("NumberRingTicket"));
+
+            p_dbSet.update(parameter);
+
+            TextView m = (TextView) findViewById(R.id.textView2);
+            m.setText(Integer.toString(parameter.getMoney()));
         }
     }
 
@@ -353,7 +364,7 @@ public class MainActivity extends AppCompatActivity
             goToShop.putExtra("ParameterBundle", parameterBundle);
 
             goToShop.setClass(MainActivity.this, ShopActivity.class);
-            startActivity(goToShop);
+            MainActivity.this.startActivityForResult(goToShop, 2);
 
         } else if (id == R.id.nav_option) {
 
