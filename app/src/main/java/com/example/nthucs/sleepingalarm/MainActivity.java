@@ -236,6 +236,17 @@ public class MainActivity extends AppCompatActivity
             adapter.notifyDataSetChanged();
             removeAlarmInSystem(alarmBeSet.getId());
             newAlarmInSystem(alarmBeSet.getHour(), alarmBeSet.getMinute(), alarmBeSet.getId(), alarmBeSet.getRingPath());
+        } else if(resultCode == Activity.RESULT_OK && requestCode == 2){
+
+            Bundle parameterBundle = data.getBundleExtra("ParameterBundle");
+            parameter.setMoney(parameterBundle.getInt("Money"));
+            parameter.setNumberTimeTicket(parameterBundle.getInt("NumberTimeTicket"));
+            parameter.setNumberRingTicket(parameterBundle.getInt("NumberRingTicket"));
+
+            p_dbSet.update(parameter);
+
+            TextView m = (TextView) findViewById(R.id.textView2);
+            m.setText(Integer.toString(parameter.getMoney()));
         }
     }
 
@@ -344,18 +355,18 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_shop) {
 
-            Intent i = new Intent();
-            i.setClass(MainActivity.this, ShopActivity.class);
-            startActivity(i);
+            Intent goToShop = new Intent();
 
-            /*
-            fragment= new FragmentShop();
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
-            f.setVisibility(View.VISIBLE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
-            mainList.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
-            */
+            Bundle parameterBundle = new Bundle();
+            parameterBundle.putInt("Money", parameter.getMoney());
+            parameterBundle.putInt("NumberTimeTicket", parameter.getNumberTimeTicket());
+            parameterBundle.putInt("NumberRingTicket", parameter.getNumberRingTicket());
+
+            goToShop.putExtra("ParameterBundle", parameterBundle);
+
+            goToShop.setClass(MainActivity.this, ShopActivity.class);
+            MainActivity.this.startActivityForResult(goToShop, 2);
+
         } else if (id == R.id.nav_option) {
 
             fragment = new FragmentOption();
