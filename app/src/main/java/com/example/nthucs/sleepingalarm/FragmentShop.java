@@ -46,9 +46,9 @@ public class FragmentShop extends Fragment {
         fragments.add(Fragment.instantiate(this.getContext(),Item1.class.getName()));
         fragments.add(Fragment.instantiate(this.getContext(),Item2.class.getName()));
 
-        mpagerAdapterItem = new PagerAdapterItem(this.getFragmentManager(),fragments);
+        /*mpagerAdapterItem = new PagerAdapterItem(this.getFragmentManager(),fragments);
         ViewPager pager = (ViewPager) this.getActivity().findViewById(R.id.ItemView);
-        pager.setAdapter(mpagerAdapterItem);
+        pager.setAdapter(mpagerAdapterItem);*/
     }
 
     @Override

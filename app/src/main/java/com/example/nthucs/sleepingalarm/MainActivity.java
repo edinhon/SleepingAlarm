@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity
     TimePickerDialog timePickerDialog;
     FloatingActionButton addButton;
     Alarm_Item_DBSet dbSet;
+    Parameter_DBSet p_dbSet;
+    ArrayList<Parameter> parameterList = new ArrayList<>();
+    Parameter parameter;
 
     public CallbackManager callbackManager;
 
@@ -69,13 +72,27 @@ public class MainActivity extends AppCompatActivity
 
         // 建立資料庫物件
         dbSet = new Alarm_Item_DBSet(getApplicationContext());
+        p_dbSet = new Parameter_DBSet(getApplicationContext());
 
         // 取得所有記事資料
         alarmList = dbSet.getAll();
         turnItemListToTextList();
+        //If new application, create a new Parameter.
+        if(p_dbSet.getCount() == 0){
+            parameter = new Parameter(100, 0, 0);
+            parameter = p_dbSet.insert(parameter);
+            parameterList = p_dbSet.getAll();
+        }
+        //If not a new app, get Parameter.
+        else {
+            parameterList = p_dbSet.getAll();
+            for(Parameter p : parameterList){
+                parameter = p;
+            }
+        }
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
 
         //Click Item to set alarm detail.
