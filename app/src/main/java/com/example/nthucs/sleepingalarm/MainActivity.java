@@ -114,6 +114,12 @@ public class MainActivity extends AppCompatActivity
 
                 goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
 
+                Bundle parameterBundle = new Bundle();
+                parameterBundle.putInt("NumberTimeTicket", parameter.getNumberTimeTicket());
+                parameterBundle.putInt("NumberRingTicket", parameter.getNumberRingTicket());
+
+                goToSetExistedAlarm.putExtra("ParameterBundle", parameterBundle);
+
                 goToSetExistedAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
                 MainActivity.this.startActivityForResult(goToSetExistedAlarm, 1);
             }

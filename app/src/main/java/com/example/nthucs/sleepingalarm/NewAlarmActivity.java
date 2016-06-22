@@ -2,7 +2,9 @@ package com.example.nthucs.sleepingalarm;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class NewAlarmActivity extends AppCompatActivity {
     int hour, minute;
@@ -19,6 +22,7 @@ public class NewAlarmActivity extends AppCompatActivity {
     TextView timeBeSet;
     TextView repeatBeSet;
     TextView ringBeSet;
+    int numberTimeTicket, numberRingTicket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,9 @@ public class NewAlarmActivity extends AppCompatActivity {
         weekStart = alarmBundle.getBooleanArray("WeekStart");
         showTimeText = alarmBundle.getString("ShowTimeText");
         ringDataPath = alarmBundle.getString("RingDataPath");
+        Bundle parameterBundle = getIntent().getBundleExtra("ParameterBundle");
+        numberTimeTicket = parameterBundle.getInt("NumberTimeTicket");
+        numberRingTicket = parameterBundle.getInt("NumberRingTicket");
 
         //Set TextView by argument.
         //Set time text.
@@ -71,21 +78,21 @@ public class NewAlarmActivity extends AppCompatActivity {
         ringBeSet.setText(temp2);
 
         //Let click text to change alarm time.
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(NewAlarmActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String temp;
-                if(hourOfDay >= 12){
-                    if((hourOfDay-12) >= 10) temp = "PM " + (hourOfDay-12);
-                    else temp = "PM 0" + (hourOfDay-12);
+                if (hourOfDay >= 12) {
+                    if ((hourOfDay - 12) >= 10) temp = "PM " + (hourOfDay - 12);
+                    else temp = "PM 0" + (hourOfDay - 12);
 
-                    if(minute >= 10)temp += " : " + minute;
+                    if (minute >= 10) temp += " : " + minute;
                     else temp += " : 0" + minute;
-                }else{
-                    if(hourOfDay >= 10) temp = "AM " + hourOfDay;
+                } else {
+                    if (hourOfDay >= 10) temp = "AM " + hourOfDay;
                     else temp = "AM 0" + hourOfDay;
 
-                    if(minute >= 10)temp += " : " + minute;
+                    if (minute >= 10) temp += " : " + minute;
                     else temp += " : 0" + minute;
                 }
                 timeBeSet.setText(temp);
@@ -97,9 +104,41 @@ public class NewAlarmActivity extends AppCompatActivity {
         timeBeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePickerDialog.show();
+                new AlertDialog.Builder(NewAlarmActivity.this)
+                        .setTitle("Want to set time ?")
+                        .setMessage("That will consume a time ticket. You have " + numberTimeTicket)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (numberTimeTicket >= 1) {
+                                    numberTimeTicket--;
+                                    timePickerDialog.show();
+                                } else {
+                                    new AlertDialog.Builder(NewAlarmActivity.this)
+                                            .setTitle("Fail")
+                                            .setMessage("You haven't enough ticket.")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
             }
         });
+
+
+
 
         //Let click text to change repeat days.
         repeatBeSet.setOnClickListener(new View.OnClickListener() {
@@ -121,17 +160,54 @@ public class NewAlarmActivity extends AppCompatActivity {
         ringBeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goToSetRings = new Intent();
+                new AlertDialog.Builder(NewAlarmActivity.this)
+                        .setTitle("Want to set ring ?")
+                        .setMessage("That will consume a ring ticket. You have " + numberRingTicket)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                Bundle ringBundle = new Bundle();
-                ringBundle.putString("RingDataPath", ringDataPath);
+                                if (numberRingTicket >= 1) {
 
-                goToSetRings.putExtra("RingBundle", ringBundle);
+                                    numberRingTicket--;
+                                    Intent goToSetRings = new Intent();
 
-                goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
-                NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
+                                    Bundle ringBundle = new Bundle();
+                                    ringBundle.putString("RingDataPath", ringDataPath);
+
+                                    goToSetRings.putExtra("RingBundle", ringBundle);
+
+                                    goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
+                                    NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
+
+                                } else {
+
+                                    new AlertDialog.Builder(NewAlarmActivity.this)
+                                            .setTitle("Fail")
+                                            .setMessage("You haven't enough ticket.")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            })
+                                            .show();
+                                }
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
             }
         });
+
+
+
 
         Button setOK = (Button)findViewById(R.id.OKbutton1);
         setOK.setOnClickListener(new View.OnClickListener() {
