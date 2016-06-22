@@ -15,14 +15,17 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class FragmentOption extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
-    private Switch mySwitch;
-    private TextView switchStatus;
     AudioManager am;
+    Parameter_DBSet p_dbSet;
+    ArrayList<Parameter> parameterList = new ArrayList<>();
+    Parameter parameter;
 
     public FragmentOption(){}
 
@@ -70,6 +73,21 @@ public class FragmentOption extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        p_dbSet = new Parameter_DBSet(getContext());
+        if(p_dbSet.getCount() == 0){
+            parameter = new Parameter(100, 0, 0);
+            parameter = p_dbSet.insert(parameter);
+            parameterList = p_dbSet.getAll();
+        }
+        //If not a new app, get Parameter.
+        else {
+            parameterList = p_dbSet.getAll();
+            for(Parameter p : parameterList){
+                parameter = p;
+            }
+        }
+
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_option, container, false);
@@ -87,6 +105,7 @@ public class FragmentOption extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 am.setStreamVolume(AudioManager.STREAM_ALARM, progress, 0);
+                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
 
             @Override
@@ -101,6 +120,27 @@ public class FragmentOption extends Fragment {
         });
 
         //Set vibrate.
+        Switch s = (Switch)view.findViewById(R.id.vibration_switch);
+        if (parameter.isVibratable()){
+            s.setChecked(true);
+        }else {
+            s.setChecked(false);
+        }
+
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    parameter.setVibratable(true);
+                    p_dbSet.update(parameter);
+                }else {
+                    parameter.setVibratable(false);
+                    p_dbSet.update(parameter);
+                }
+            }
+        });
+
+
 
 
         return view;

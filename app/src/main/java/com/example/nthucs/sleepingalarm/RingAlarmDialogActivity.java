@@ -49,7 +49,7 @@ public class RingAlarmDialogActivity extends Activity {
 
         //Play music.
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
-        Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
         setVolumeControlStream(AudioManager.STREAM_ALARM);
         AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);

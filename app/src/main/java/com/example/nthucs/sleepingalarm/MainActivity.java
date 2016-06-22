@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity
                 parameter = p;
             }
         }
+        TextView m = (TextView)findViewById(R.id.textView2);
+        m.setText(Integer.toString(parameter.getMoney()));
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alarmTimeList);
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         //New a alarm.
-        GregorianCalendar calendar = new GregorianCalendar();
+        final GregorianCalendar calendar = new GregorianCalendar();
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -178,12 +181,14 @@ public class MainActivity extends AppCompatActivity
                 newAlarmInSystem(hourOfDay, minute, newAlarm.getId(), newAlarm.getRingPath());
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.HOUR_OF_DAY), false);
 
         addButton = (FloatingActionButton) findViewById(R.id.fab);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timePickerDialog.updateTime(GregorianCalendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                        GregorianCalendar.getInstance().get(Calendar.MINUTE));
                 timePickerDialog.show();
                 adapter.notifyDataSetChanged();
             }
