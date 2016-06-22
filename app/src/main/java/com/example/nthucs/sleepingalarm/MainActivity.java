@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         turnItemListToTextList();
         //If new application, create a new Parameter.
         if (p_dbSet.getCount() == 0) {
-            parameter = new Parameter(100, 0, 0);
+            parameter = new Parameter(1000, 0, 0);
             parameter = p_dbSet.insert(parameter);
             parameterList = p_dbSet.getAll();
         }
@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity
                 parameter = p;
             }
         }
-        TextView m = (TextView) findViewById(R.id.textView2);
-        m.setText(Integer.toString(parameter.getMoney()));
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alarmTimeList);
@@ -245,8 +243,6 @@ public class MainActivity extends AppCompatActivity
 
             p_dbSet.update(parameter);
 
-            TextView m = (TextView) findViewById(R.id.textView2);
-            m.setText(Integer.toString(parameter.getMoney()));
         }
     }
 

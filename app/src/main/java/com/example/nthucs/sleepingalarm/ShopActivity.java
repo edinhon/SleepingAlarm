@@ -30,6 +30,9 @@ public class ShopActivity extends FragmentActivity {
     private int money;
     private int numberTimeTicket;
     private int numberRingTicket;
+    TextView moneyText;
+    TextView ownText;
+    TextView priceText;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -57,10 +60,14 @@ public class ShopActivity extends FragmentActivity {
         numberRingTicket = parameterBundle.getInt("NumberRingTicket");
 
 
-        final TextView priceText = (TextView)findViewById(R.id.priceText);
+        moneyText = (TextView)findViewById(R.id.moneyText);
+        ownText = (TextView)findViewById(R.id.ownText);
+        priceText = (TextView)findViewById(R.id.priceText);
+        moneyText.setText("Money : " + Integer.toString(money));
+        ownText.setText("Own : " + Integer.toString(numberTimeTicket));
+        priceText.setText(TIME_TICKET_PRICE);
 
         final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
-        priceText.setText(TIME_TICKET_PRICE);
         radioGroup.check(R.id.radioButton);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -74,10 +81,12 @@ public class ShopActivity extends FragmentActivity {
                     case 0:
                         radioGroup.check(R.id.radioButton);
                         priceText.setText(TIME_TICKET_PRICE);
+                        ownText.setText("Own : " + Integer.toString(numberTimeTicket));
                         break;
                     case 1:
                         radioGroup.check(R.id.radioButton2);
                         priceText.setText(RING_TICKET_PRICE);
+                        ownText.setText("Own : " + Integer.toString(numberRingTicket));
                         break;
                 }
             }
@@ -119,10 +128,14 @@ public class ShopActivity extends FragmentActivity {
                         if (whichone == 1) {
                             money -= PRICE_T;
                             numberTimeTicket++;
+                            moneyText.setText("Money : " + Integer.toString(money));
+                            ownText.setText("Own : " + Integer.toString(numberTimeTicket));
                             Toast.makeText(ShopActivity.this, "Buy first", Toast.LENGTH_SHORT).show();
                         } else {
                             money -= PRICE_R;
                             numberRingTicket++;
+                            moneyText.setText("Money : " + Integer.toString(money));
+                            ownText.setText("Own : " + Integer.toString(numberRingTicket));
                             Toast.makeText(ShopActivity.this, "Buy second", Toast.LENGTH_SHORT).show();
                         }
                     }
