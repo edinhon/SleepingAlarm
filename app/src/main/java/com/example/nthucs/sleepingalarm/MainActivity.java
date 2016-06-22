@@ -240,6 +240,12 @@ public class MainActivity extends AppCompatActivity
             adapter.notifyDataSetChanged();
             removeAlarmInSystem(alarmBeSet.getId());
             newAlarmInSystem(alarmBeSet.getHour(), alarmBeSet.getMinute(), alarmBeSet.getId(), alarmBeSet.getRingPath());
+
+            Bundle parameterBundle = data.getBundleExtra("ParameterBundle");
+            parameter.setNumberTimeTicket(parameterBundle.getInt("NumberTimeTicket"));
+            parameter.setNumberRingTicket(parameterBundle.getInt("NumberRingTicket"));
+
+            p_dbSet.update(parameter);
         } else if(resultCode == Activity.RESULT_OK && requestCode == 2){
 
             Bundle parameterBundle = data.getBundleExtra("ParameterBundle");
@@ -322,11 +328,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

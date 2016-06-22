@@ -222,11 +222,15 @@ public class NewAlarmActivity extends AppCompatActivity {
                 returnBundle.putBooleanArray("WeekStart", weekStart);
                 returnBundle.putString("ShowTimeText", showTimeText);
                 returnBundle.putString("RingDataPath", ringDataPath);
+                Bundle parameterBundle = new Bundle();
+                parameterBundle.putInt("NumberTimeTicket", numberTimeTicket);
+                parameterBundle.putInt("NumberRingTicket", numberRingTicket);
 
                 //取出上一個Activity傳過來的 Intent 物件。
                 Intent intent = getIntent();
                 //放入要回傳的包裹。
                 intent.putExtra("ReturnBundle", returnBundle);
+                intent.putExtra("ParameterBundle", parameterBundle);
 
                 //設定回傳狀態。
                 setResult(Activity.RESULT_OK, intent);
