@@ -74,7 +74,7 @@ public class FragmentOption extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        p_dbSet = new Parameter_DBSet(getContext());
+        p_dbSet = new Parameter_DBSet(getActivity());
         if(p_dbSet.getCount() == 0){
             parameter = new Parameter(100, 0, 0);
             parameter = p_dbSet.insert(parameter);
