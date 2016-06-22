@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/authButton"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -22,18 +22,6 @@
         android:layout_marginTop="15dp"
         android:visibility="gone"
         />
-
-    <Button
-        android:id="@+id/batchRequestButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        android:text="@string/batchRequest"
-        />
-
 
 
 </LinearLayout>
