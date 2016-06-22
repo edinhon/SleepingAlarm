@@ -11,25 +11,30 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.nthucs.sleepingalarm.MainActivity">
 
-    <!--<TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />-->
-
-
     <FrameLayout
+        android:id="@+id/mainFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/mainFrame"></FrameLayout>
+        android:layout_alignParentTop="true"></FrameLayout>
 
     <ListView
+        android:id="@+id/MainAlarmListView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/MainAlarmListView"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="left|bottom"
+        android:maxWidth="200dp"
+        android:minHeight="100dp"
+        android:textSize="30dp" />
 
 </RelativeLayout>

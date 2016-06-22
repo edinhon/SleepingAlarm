@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity
     TimePickerDialog timePickerDialog;
     FloatingActionButton addButton;
     Alarm_Item_DBSet dbSet;
+    Parameter_DBSet p_dbSet;
+    ArrayList<Parameter> parameterList = new ArrayList<>();
+    Parameter parameter;
 
     public CallbackManager callbackManager;
 
@@ -69,13 +73,29 @@ public class MainActivity extends AppCompatActivity
 
         // 建立資料庫物件
         dbSet = new Alarm_Item_DBSet(getApplicationContext());
+        p_dbSet = new Parameter_DBSet(getApplicationContext());
 
         // 取得所有記事資料
         alarmList = dbSet.getAll();
         turnItemListToTextList();
+        //If new application, create a new Parameter.
+        if (p_dbSet.getCount() == 0) {
+            parameter = new Parameter(100, 0, 0);
+            parameter = p_dbSet.insert(parameter);
+            parameterList = p_dbSet.getAll();
+        }
+        //If not a new app, get Parameter.
+        else {
+            parameterList = p_dbSet.getAll();
+            for (Parameter p : parameterList) {
+                parameter = p;
+            }
+        }
+        TextView m = (TextView) findViewById(R.id.textView2);
+        m.setText(Integer.toString(parameter.getMoney()));
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alarmTimeList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alarmTimeList);
         mainList.setAdapter(adapter);
 
         //Click Item to set alarm detail.
@@ -132,22 +152,22 @@ public class MainActivity extends AppCompatActivity
         });
 
         //New a alarm.
-        GregorianCalendar calendar = new GregorianCalendar();
+        final GregorianCalendar calendar = new GregorianCalendar();
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String temp;
-                if(hourOfDay >= 12){
-                    if((hourOfDay-12) >= 10) temp = "PM " + (hourOfDay-12);
-                    else temp = "PM 0" + (hourOfDay-12);
+                if (hourOfDay >= 12) {
+                    if ((hourOfDay - 12) >= 10) temp = "PM " + (hourOfDay - 12);
+                    else temp = "PM 0" + (hourOfDay - 12);
 
-                    if(minute >= 10)temp += " : " + minute;
+                    if (minute >= 10) temp += " : " + minute;
                     else temp += " : 0" + minute;
-                }else{
-                    if(hourOfDay >= 10) temp = "AM " + hourOfDay;
+                } else {
+                    if (hourOfDay >= 10) temp = "AM " + hourOfDay;
                     else temp = "AM 0" + hourOfDay;
 
-                    if(minute >= 10)temp += " : " + minute;
+                    if (minute >= 10) temp += " : " + minute;
                     else temp += " : 0" + minute;
                 }
                 alarmTimeList.add(temp);
@@ -167,6 +187,8 @@ public class MainActivity extends AppCompatActivity
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timePickerDialog.updateTime(GregorianCalendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                        GregorianCalendar.getInstance().get(Calendar.MINUTE));
                 timePickerDialog.show();
                 adapter.notifyDataSetChanged();
             }
@@ -204,7 +226,7 @@ public class MainActivity extends AppCompatActivity
             alarmBeSet.setMinute(alarmBundle.getInt("Minute"));
             final boolean[] weekStart = alarmBundle.getBooleanArray("WeekStart");
             alarmBeSet.setText(alarmBundle.getString("ShowTimeText"));
-            for(int i = 0 ; i < 7 ; i++){
+            for (int i = 0; i < 7; i++) {
                 alarmBeSet.weekStart[i] = weekStart[i];
             }
             alarmBeSet.setRingPath(alarmBundle.getString("RingDataPath"));
@@ -216,13 +238,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void turnItemListToTextList(){
-        for(Alarm_Item a : alarmList){
+    public void turnItemListToTextList() {
+        for (Alarm_Item a : alarmList) {
             alarmTimeList.add(a.getText());
         }
     }
 
-    public void newAlarmInSystem(int hour, int minute, long id, String ringDataPath){
+    public void newAlarmInSystem(int hour, int minute, long id, String ringDataPath) {
         Calendar calendar = Calendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
@@ -231,8 +253,7 @@ public class MainActivity extends AppCompatActivity
             --hour;
             minute = minute - currentMinute + 60;
             hour = hour - currentHour;
-        }
-        else {
+        } else {
             minute = minute - currentMinute;
             hour = hour - currentHour;
         }
@@ -246,19 +267,19 @@ public class MainActivity extends AppCompatActivity
 
         intent.putExtra("RingDataPath", ringDataPath);
 
-        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int) id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nowTime = calendar.getTimeInMillis();
-        nowTime = calendar.getTimeInMillis() - (nowTime%60000);
+        nowTime = calendar.getTimeInMillis() - (nowTime % 60000);
         am.set(AlarmManager.RTC_WAKEUP, nowTime + (hour * 60 + minute) * 60 * 1000, pi);
     }
 
-    public void removeAlarmInSystem(long id){
+    public void removeAlarmInSystem(long id) {
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("msg", "ring_alarm");
 
-        PendingIntent pi = PendingIntent.getBroadcast(this, (int)id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int) id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.cancel(pi);
@@ -305,25 +326,25 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         if (id == R.id.nav_login) {
 
-            fragment= new FragmentLogin();
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            fragment = new FragmentLogin();
+            FrameLayout f = (FrameLayout) findViewById(R.id.mainFrame);
             f.setVisibility(View.VISIBLE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
 
-        } else if(id == R.id.nav_home){
+        } else if (id == R.id.nav_home) {
 
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            FrameLayout f = (FrameLayout) findViewById(R.id.mainFrame);
             f.setVisibility(View.GONE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
             mainList.setVisibility(View.VISIBLE);
             addButton.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_shop) {
 
             Intent i = new Intent();
-            i.setClass(MainActivity.this,ShopActivity.class);
+            i.setClass(MainActivity.this, ShopActivity.class);
             startActivity(i);
 
             /*
@@ -336,10 +357,10 @@ public class MainActivity extends AppCompatActivity
             */
         } else if (id == R.id.nav_option) {
 
-            fragment= new FragmentOption();
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
+            fragment = new FragmentOption();
+            FrameLayout f = (FrameLayout) findViewById(R.id.mainFrame);
             f.setVisibility(View.VISIBLE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
+            ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
             mainList.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
 

@@ -11,7 +11,14 @@ public class Parameter {
     private int numberRingTicket;
     private long id;
 
-    public void setVibratable(boolean input){
+    public Parameter(int m, int ntt, int nrt) {
+        setMoney(m);
+        setNumberTimeTicket(ntt);
+        setNumberRingTicket(nrt);
+        setVibratable(true);
+    }
+
+    public void setVibratable(boolean input) {
         vibratable = input;
     }
 
@@ -19,35 +26,35 @@ public class Parameter {
         return vibratable;
     }
 
-    public void setMoney(int input){
+    public void setMoney(int input) {
         money = input;
     }
 
-    public int getMoney(){
+    public int getMoney() {
         return money;
     }
 
-    public void setNumberTimeTicket(int input){
+    public void setNumberTimeTicket(int input) {
         numberTimeTicket = input;
     }
 
-    public int getNumberTimeTicket(){
+    public int getNumberTimeTicket() {
         return numberTimeTicket;
     }
 
-    public void setNumberRingTicket(int input){
+    public void setNumberRingTicket(int input) {
         numberRingTicket = input;
     }
 
-    public int getNumberRingTicket(){
+    public int getNumberRingTicket() {
         return numberRingTicket;
     }
 
-    public void setId(long input){
+    public void setId(long input) {
         id = input;
     }
 
-    public long getId(){
+    public long getId() {
         return id;
     }
 

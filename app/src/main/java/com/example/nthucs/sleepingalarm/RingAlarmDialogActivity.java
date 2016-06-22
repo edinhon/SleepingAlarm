@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RingAlarmDialogActivity extends Activity {
 
@@ -29,6 +30,9 @@ public class RingAlarmDialogActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     MediaPlayer mp;
+    Parameter_DBSet p_dbSet;
+    ArrayList<Parameter> parameterList = new ArrayList<>();
+    Parameter parameter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +42,38 @@ public class RingAlarmDialogActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
+        p_dbSet = new Parameter_DBSet(getApplicationContext());
+        if (p_dbSet.getCount() == 0) {
+            parameter = new Parameter(100, 0, 0);
+            parameter = p_dbSet.insert(parameter);
+            parameterList = p_dbSet.getAll();
+        }
+        //If not a new app, get Parameter.
+        else {
+            parameterList = p_dbSet.getAll();
+            for (Parameter p : parameterList) {
+                parameter = p;
+            }
+        }
+
         //Show Toast.
         Toast.makeText(this, "Ring", Toast.LENGTH_LONG).show();
 
         //Let device vibrate.
-        final Vibrator vibrator = (Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
-        if(vibrator.hasVibrator()){
+        final Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+        if (vibrator.hasVibrator() && parameter.isVibratable()) {
             vibrator.vibrate(new long[]{1000, 1000}, 0);
         }
 
         //Play music.
         String ringDataPath = getIntent().getExtras().getString("RingDataPath");
-        Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, ringDataPath, Toast.LENGTH_LONG).show();
 
         setVolumeControlStream(AudioManager.STREAM_ALARM);
-        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         am.setMode(AudioManager.MODE_NORMAL);
 
-        if(ringDataPath != null && !ringDataPath.equals("")){
+        if (ringDataPath != null && !ringDataPath.equals("")) {
             mp = new MediaPlayer();
             mp.setAudioStreamType(AudioManager.STREAM_ALARM);
             try {
@@ -73,13 +91,12 @@ public class RingAlarmDialogActivity extends Activity {
                 e.printStackTrace();
                 mp = MediaPlayer.create(this, R.raw.shot);
                 mp.start();
-            } catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.printStackTrace();
                 mp = MediaPlayer.create(this, R.raw.shot);
                 mp.start();
             }
-        }
-        else{
+        } else {
             mp = MediaPlayer.create(this, R.raw.shot);
             mp.start();
         }
