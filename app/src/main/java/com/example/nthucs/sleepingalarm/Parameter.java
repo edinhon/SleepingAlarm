@@ -1,5 +1,7 @@
 package com.example.nthucs.sleepingalarm;
 
+import java.util.GregorianCalendar;
+
 /**
  * Created by NTHUCS on 2016/6/22.
  */
@@ -10,12 +12,15 @@ public class Parameter {
     private int numberTimeTicket;
     private int numberRingTicket;
     private long id;
+    private long sleepTime;
 
     public Parameter(int m, int ntt, int nrt) {
+        GregorianCalendar calendar = new GregorianCalendar();
         setMoney(m);
         setNumberTimeTicket(ntt);
         setNumberRingTicket(nrt);
         setVibratable(true);
+        setSleepTime(calendar.getTimeInMillis());
     }
 
     public void setVibratable(boolean input) {
@@ -56,6 +61,14 @@ public class Parameter {
 
     public long getId() {
         return id;
+    }
+
+    public void setSleepTime(long input){
+        sleepTime = input;
+    }
+
+    public long getSleepTime(){
+        return sleepTime;
     }
 
 }

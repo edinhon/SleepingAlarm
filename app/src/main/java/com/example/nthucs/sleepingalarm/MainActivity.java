@@ -329,6 +329,23 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.push) {
+            Calendar calendar = Calendar.getInstance();
+            parameter.setSleepTime(calendar.getTimeInMillis());
+            p_dbSet.update(parameter);
+            return true;
+        } else if(id == R.id.pull){
+            Calendar calendar = Calendar.getInstance();
+            long earnMoney = (calendar.getTimeInMillis() - parameter.getSleepTime()) / (1000 * 60);
+            int nowMoney = parameter.getMoney();
+            parameter.setMoney(nowMoney + (int)earnMoney);
+            parameter.setSleepTime(calendar.getTimeInMillis());
+            p_dbSet.update(parameter);
+            Toast.makeText(MainActivity.this, "You earn " + earnMoney + " !", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
