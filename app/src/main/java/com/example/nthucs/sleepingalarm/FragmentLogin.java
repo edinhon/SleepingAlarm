@@ -59,6 +59,9 @@ public class FragmentLogin extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        callbackManager = CallbackManager.Factory.create();
+
+
 
     }
 
@@ -70,7 +73,7 @@ public class FragmentLogin extends Fragment {
 
         LoginButton authButton = (LoginButton)view.findViewById(R.id.authButton);
         authButton.setFragment(this);
-        authButton.setReadPermissions(Arrays.asList("user_status"));
+        authButton.setReadPermissions(Arrays.asList("public_profile"));
 
         authButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -78,20 +81,20 @@ public class FragmentLogin extends Fragment {
                 accessToken = loginResult.getAccessToken();
                 Log.d("Facebook","access got it");
 
-                GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback(){
+                GraphRequest request = GraphRequest.newMeRequest(accessToken,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                // Application code
+                            }
+                        });
 
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-
-                        //讀出姓名 ID FB個人頁面連結
-
-                        Log.d("FB","complete");
-                        Log.d("FB",object.optString("name"));
-                        Log.d("FB",object.optString("link"));
-                        Log.d("FB",object.optString("id"));
-
-                    }
-                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,link");
+                request.setParameters(parameters);
+                request.executeAsync();
 
             }
 
