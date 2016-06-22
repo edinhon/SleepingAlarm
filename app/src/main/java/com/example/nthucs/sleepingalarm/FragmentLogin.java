@@ -100,6 +100,7 @@ public class FragmentLogin extends Fragment {
                                     if (object.has("picture")) {
                                         String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                         Picasso.with(getActivity()).load(profilePicUrl).into(userPhoto);
+
                                     }
                                     Log.d("email", email);
                                     Log.d("bir", birthday);
