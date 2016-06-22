@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,8 +49,8 @@ import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ArrayList<String> alarmTimeList = new ArrayList<String>();
-    ArrayList<Alarm_Item> alarmList = new ArrayList<Alarm_Item>();
+    ArrayList<String> alarmTimeList = new ArrayList<>();
+    ArrayList<Alarm_Item> alarmList = new ArrayList<>();
     ArrayAdapter adapter;
     TimePickerDialog timePickerDialog;
     FloatingActionButton addButton;
@@ -76,11 +77,9 @@ public class MainActivity extends AppCompatActivity
         p_dbSet = new Parameter_DBSet(getApplicationContext());
 
         // 取得所有記事資料
-        alarmList = dbSet.getAll();
-        turnItemListToTextList();
         //If new application, create a new Parameter.
         if (p_dbSet.getCount() == 0) {
-            parameter = new Parameter(1000, 0, 0);
+            parameter = new Parameter(1000, 7, 7);
             parameter = p_dbSet.insert(parameter);
             parameterList = p_dbSet.getAll();
         }
@@ -90,6 +89,24 @@ public class MainActivity extends AppCompatActivity
             for (Parameter p : parameterList) {
                 parameter = p;
             }
+        }
+        //If new app, create 7 alarm item.
+        if(dbSet.getCount() == 0){
+            Alarm_Item a = new Alarm_Item(0, 0, "AM 00 : 00");
+            for(int i = 0 ; i < 7 ; i++){
+                a.weekStart[i] = true;
+                if(i != 0) a.weekStart[i-1] = false;
+                dbSet.insert(a);
+            }
+            alarmList = dbSet.getAll();
+            notFullAlarmTextList();
+        } else if (!parameter.isAllSet()){
+            alarmList = dbSet.getAll();
+            notFullAlarmTextList();
+        }
+        else {
+            alarmList = dbSet.getAll();
+            turnItemListToTextList();
         }
 
         ListView mainList = (ListView) findViewById(R.id.MainAlarmListView);
@@ -129,28 +146,30 @@ public class MainActivity extends AppCompatActivity
         mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Delete")
-                        .setMessage("Do you want to delete this alarm ?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dbSet.delete(alarmList.get(position).getId());
-                                removeAlarmInSystem(alarmList.get(position).getId());
-                                alarmList.remove(position);
-                                alarmTimeList.remove(position);
-                                adapter.notifyDataSetChanged();
-                                Toast.makeText(getApplicationContext(), "Delete Successful", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "Not Delete", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .show();
+                if(position > 6) {
 
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Delete")
+                            .setMessage("Do you want to delete this alarm ?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dbSet.delete(alarmList.get(position).getId());
+                                    removeAlarmInSystem(alarmList.get(position).getId());
+                                    alarmList.remove(position);
+                                    alarmTimeList.remove(position);
+                                    adapter.notifyDataSetChanged();
+                                    Toast.makeText(getApplicationContext(), "Delete Successful", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getApplicationContext(), "Not Delete", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .show();
+                }
                 return true;
             }
         });
@@ -235,8 +254,38 @@ public class MainActivity extends AppCompatActivity
                 alarmBeSet.weekStart[i] = weekStart[i];
             }
             alarmBeSet.setRingPath(alarmBundle.getString("RingDataPath"));
+            alarmBeSet.setHaveSet(true);
             dbSet.update(alarmBeSet);
-            alarmTimeList.add(index, alarmBundle.getString("ShowTimeText"));
+            if(index >= 7){
+                alarmTimeList.add(index, alarmBundle.getString("ShowTimeText"));
+            } else {
+                String day = "";
+                switch (index) {
+                    case 0:
+                        day = "Monday ";
+                        break;
+                    case 1:
+                        day = "Tuesday ";
+                        break;
+                    case 2:
+                        day = "Wednesday ";
+                        break;
+                    case 3:
+                        day = "Thursday ";
+                        break;
+                    case 4:
+                        day = "Friday ";
+                        break;
+                    case 5:
+                        day = "Saturday ";
+                        break;
+                    case 6:
+                        day = "Sunday ";
+                        break;
+                }
+                alarmTimeList.add(index, day + alarmBundle.getString("ShowTimeText"));
+            }
+
             adapter.notifyDataSetChanged();
             removeAlarmInSystem(alarmBeSet.getId());
             newAlarmInSystem(alarmBeSet.getHour(), alarmBeSet.getMinute(), alarmBeSet.getId(), alarmBeSet.getRingPath());
@@ -259,8 +308,97 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void turnItemListToTextList() {
+        int i = 0;
         for (Alarm_Item a : alarmList) {
-            alarmTimeList.add(a.getText());
+            String day = "";
+            switch (i) {
+                case 0:
+                    day = "Monday ";
+                    break;
+                case 1:
+                    day = "Tuesday ";
+                    break;
+                case 2:
+                    day = "Wednesday ";
+                    break;
+                case 3:
+                    day = "Thursday ";
+                    break;
+                case 4:
+                    day = "Friday ";
+                    break;
+                case 5:
+                    day = "Saturday ";
+                    break;
+                case 6:
+                    day = "Sunday ";
+                    break;
+            }
+            i++;
+            alarmTimeList.add(day + a.getText());
+        }
+    }
+
+    public void notFullAlarmTextList(){
+        int i = 0;
+        for (Alarm_Item a : alarmList) {
+
+            if(a.isHaveSet() == true && i < 7){
+                String day = "";
+                switch (i) {
+                    case 0:
+                        day = "Monday ";
+                        break;
+                    case 1:
+                        day = "Tuesday ";
+                        break;
+                    case 2:
+                        day = "Wednesday ";
+                        break;
+                    case 3:
+                        day = "Thursday ";
+                        break;
+                    case 4:
+                        day = "Friday ";
+                        break;
+                    case 5:
+                        day = "Saturday ";
+                        break;
+                    case 6:
+                        day = "Sunday ";
+                        break;
+                }
+                alarmTimeList.add(day + a.getText());
+            } else if(i < 7){
+                String day = "";
+                switch (i) {
+                    case 0:
+                        day = "Monday";
+                        break;
+                    case 1:
+                        day = "Tuesday";
+                        break;
+                    case 2:
+                        day = "Wednesday";
+                        break;
+                    case 3:
+                        day = "Thursday";
+                        break;
+                    case 4:
+                        day = "Friday";
+                        break;
+                    case 5:
+                        day = "Saturday";
+                        break;
+                    case 6:
+                        day = "Sunday";
+                        break;
+                }
+                alarmTimeList.add(day);
+            } else {
+                alarmTimeList.add(a.getText());
+            }
+            i++;
         }
     }
 

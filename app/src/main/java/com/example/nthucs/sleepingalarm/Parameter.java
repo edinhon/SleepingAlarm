@@ -13,6 +13,7 @@ public class Parameter {
     private int numberRingTicket;
     private long id;
     private long sleepTime;
+    private boolean allSet;
 
     public Parameter(int m, int ntt, int nrt) {
         GregorianCalendar calendar = new GregorianCalendar();
@@ -21,6 +22,7 @@ public class Parameter {
         setNumberRingTicket(nrt);
         setVibratable(true);
         setSleepTime(calendar.getTimeInMillis());
+        setAllSet(false);
     }
 
     public void setVibratable(boolean input) {
@@ -71,4 +73,11 @@ public class Parameter {
         return sleepTime;
     }
 
+    public void setAllSet(boolean input){
+        allSet = input;
+    }
+
+    public boolean isAllSet(){
+        return allSet;
+    }
 }

@@ -24,6 +24,7 @@ public class Parameter_DBSet {
     public static final String NUMBER_TIME_TICKET_COLUMN = "numberTimeTicket";
     public static final String NUMBER_RING_TICKET_COLUMN = "numberRingTicket";
     public static final String SLEEP_TIME_COLUMN = "sleepTime";
+    public static final String ALL_SET_COLUMN = "allSet";
 
     // 使用上面宣告的變數建立表格的SQL指令
     public static final String CREATE_TABLE =
@@ -33,7 +34,8 @@ public class Parameter_DBSet {
                     MONEY_COLUMN + " INTEGER NOT NULL, " +
                     NUMBER_TIME_TICKET_COLUMN + " INTEGER NOT NULL, " +
                     NUMBER_RING_TICKET_COLUMN + " INTEGER NOT NULL, " +
-                    SLEEP_TIME_COLUMN + " INTEGER NOT NULL)";
+                    SLEEP_TIME_COLUMN + " INTEGER NOT NULL, " +
+                    ALL_SET_COLUMN + " INTEGER NOT NULL)";
 
 
     // 資料庫物件
@@ -62,6 +64,8 @@ public class Parameter_DBSet {
         cv.put(NUMBER_TIME_TICKET_COLUMN, item.getNumberTimeTicket());
         cv.put(NUMBER_RING_TICKET_COLUMN, item.getNumberRingTicket());
         cv.put(SLEEP_TIME_COLUMN, item.getSleepTime());
+        if(item.isAllSet()) cv.put(ALL_SET_COLUMN, 1);
+        else cv.put(ALL_SET_COLUMN, 0);
 
         // 新增一筆資料並取得編號
         // 第一個參數是表格名稱
@@ -86,6 +90,8 @@ public class Parameter_DBSet {
         cv.put(NUMBER_TIME_TICKET_COLUMN, item.getNumberTimeTicket());
         cv.put(NUMBER_RING_TICKET_COLUMN, item.getNumberRingTicket());
         cv.put(SLEEP_TIME_COLUMN, item.getSleepTime());
+        if(item.isAllSet()) cv.put(ALL_SET_COLUMN, 1);
+        else cv.put(ALL_SET_COLUMN, 0);
 
         // 設定修改資料的條件為編號
         // 格式為「欄位名稱＝資料」
@@ -151,6 +157,8 @@ public class Parameter_DBSet {
         result.setNumberTimeTicket(cursor.getInt(3));
         result.setNumberRingTicket(cursor.getInt(4));
         result.setSleepTime(cursor.getLong(5));
+        if(cursor.getInt(6) == 1) result.setAllSet(true);
+        else result.setAllSet(false);
 
 
         // 回傳結果

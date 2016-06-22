@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 public class NewAlarmActivity extends AppCompatActivity {
     int hour, minute;
+    int index;
     boolean[] weekStart;
     String showTimeText;
     String ringDataPath;
@@ -33,9 +34,9 @@ public class NewAlarmActivity extends AppCompatActivity {
 
         //Take argument from bundle.
         Bundle alarmBundle = getIntent().getBundleExtra("AlarmBundle");
-        final int index = alarmBundle.getInt("Index");
         hour = alarmBundle.getInt("Hour");
         minute = alarmBundle.getInt("Minute");
+        index = alarmBundle.getInt("Index");
         weekStart = alarmBundle.getBooleanArray("WeekStart");
         showTimeText = alarmBundle.getString("ShowTimeText");
         ringDataPath = alarmBundle.getString("RingDataPath");
@@ -104,36 +105,41 @@ public class NewAlarmActivity extends AppCompatActivity {
         timeBeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(NewAlarmActivity.this)
-                        .setTitle("Want to set time ?")
-                        .setMessage("That will consume a time ticket. You have " + numberTimeTicket)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (numberTimeTicket >= 1) {
-                                    numberTimeTicket--;
-                                    timePickerDialog.show();
-                                } else {
-                                    new AlertDialog.Builder(NewAlarmActivity.this)
-                                            .setTitle("Fail")
-                                            .setMessage("You haven't enough ticket.")
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
+                if(index >= 7){
+                    timePickerDialog.show();
+                } else {
 
-                                                }
-                                            })
-                                            .show();
+                    new AlertDialog.Builder(NewAlarmActivity.this)
+                            .setTitle("Want to set time ?")
+                            .setMessage("That will consume a time ticket. You have " + numberTimeTicket)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (numberTimeTicket >= 1) {
+                                        numberTimeTicket--;
+                                        timePickerDialog.show();
+                                    } else {
+                                        new AlertDialog.Builder(NewAlarmActivity.this)
+                                                .setTitle("Fail")
+                                                .setMessage("You haven't enough ticket.")
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                })
+                                                .show();
+                                    }
                                 }
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        })
-                        .show();
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
@@ -141,7 +147,7 @@ public class NewAlarmActivity extends AppCompatActivity {
 
 
         //Let click text to change repeat days.
-        repeatBeSet.setOnClickListener(new View.OnClickListener() {
+        /*repeatBeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goToSetRepeat = new Intent();
@@ -154,55 +160,68 @@ public class NewAlarmActivity extends AppCompatActivity {
                 goToSetRepeat.setClass(NewAlarmActivity.this, SetRepeatActivity.class);
                 NewAlarmActivity.this.startActivityForResult(goToSetRepeat, 0);
             }
-        });
+        });*/
 
         //Let click text to change rings.
         ringBeSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(NewAlarmActivity.this)
-                        .setTitle("Want to set ring ?")
-                        .setMessage("That will consume a ring ticket. You have " + numberRingTicket)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                if(index >= 7){
+                    Intent goToSetRings = new Intent();
 
-                                if (numberRingTicket >= 1) {
+                    Bundle ringBundle = new Bundle();
+                    ringBundle.putString("RingDataPath", ringDataPath);
 
-                                    numberRingTicket--;
-                                    Intent goToSetRings = new Intent();
+                    goToSetRings.putExtra("RingBundle", ringBundle);
 
-                                    Bundle ringBundle = new Bundle();
-                                    ringBundle.putString("RingDataPath", ringDataPath);
+                    goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
+                    NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
+                } else {
 
-                                    goToSetRings.putExtra("RingBundle", ringBundle);
+                    new AlertDialog.Builder(NewAlarmActivity.this)
+                            .setTitle("Want to set ring ?")
+                            .setMessage("That will consume a ring ticket. You have " + numberRingTicket)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                    goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
-                                    NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
+                                    if (numberRingTicket >= 1) {
 
-                                } else {
+                                        numberRingTicket--;
+                                        Intent goToSetRings = new Intent();
 
-                                    new AlertDialog.Builder(NewAlarmActivity.this)
-                                            .setTitle("Fail")
-                                            .setMessage("You haven't enough ticket.")
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
+                                        Bundle ringBundle = new Bundle();
+                                        ringBundle.putString("RingDataPath", ringDataPath);
 
-                                                }
-                                            })
-                                            .show();
+                                        goToSetRings.putExtra("RingBundle", ringBundle);
+
+                                        goToSetRings.setClass(NewAlarmActivity.this, MusicChooseActivity.class);
+                                        NewAlarmActivity.this.startActivityForResult(goToSetRings, 1);
+
+                                    } else {
+
+                                        new AlertDialog.Builder(NewAlarmActivity.this)
+                                                .setTitle("Fail")
+                                                .setMessage("You haven't enough ticket.")
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                })
+                                                .show();
+                                    }
+
                                 }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .show();
+                                }
+                            })
+                            .show();
+                }
             }
         });
 

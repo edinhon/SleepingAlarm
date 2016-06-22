@@ -11,6 +11,7 @@ public class Alarm_Item {
     private long id;
     public boolean[] weekStart = new boolean[7];
     public String ringDataPath;
+    private boolean haveSet;
 
     public Alarm_Item(int hrInput, int minInput, String text){
         setHour(hrInput);
@@ -20,6 +21,7 @@ public class Alarm_Item {
         for(int i = 0 ; i < 7 ; i++){
             weekStart[i] = false;
         }
+        setHaveSet(false);
     }
 
     public void setId(long idInput){
@@ -60,5 +62,13 @@ public class Alarm_Item {
 
     public String getRingPath(){
         return ringDataPath;
+    }
+
+    public void setHaveSet(boolean input){
+        haveSet = input;
+    }
+
+    public boolean isHaveSet(){
+        return haveSet;
     }
 }

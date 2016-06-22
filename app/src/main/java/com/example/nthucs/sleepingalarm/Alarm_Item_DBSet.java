@@ -30,6 +30,7 @@ public class Alarm_Item_DBSet {
     public static final String FRIDAY_COLUMN = "Friday";
     public static final String SATURDAY_COLUMN = "Saturday";
     public static final String SUNDAY_COLUMN = "Sunday";
+    public static final String HAVE_SET_COLUMN = "haveSet";
 
     // 使用上面宣告的變數建立表格的SQL指令
     public static final String CREATE_TABLE =
@@ -45,7 +46,8 @@ public class Alarm_Item_DBSet {
                     THURSDAY_COLUMN + " INTEGER NOT NULL, " +
                     FRIDAY_COLUMN + " INTEGER NOT NULL, " +
                     SATURDAY_COLUMN + " INTEGER NOT NULL, " +
-                    SUNDAY_COLUMN + " INTEGER NOT NULL)";
+                    SUNDAY_COLUMN + " INTEGER NOT NULL, " +
+                    HAVE_SET_COLUMN + " INTEGER NOT NULL)";
 
     // 資料庫物件
     private SQLiteDatabase db;
@@ -85,6 +87,8 @@ public class Alarm_Item_DBSet {
         else cv.put(SATURDAY_COLUMN, 0);
         if(item.weekStart[6]) cv.put(SUNDAY_COLUMN, 1);
         else cv.put(SUNDAY_COLUMN, 0);
+        if(item.isHaveSet()) cv.put(HAVE_SET_COLUMN, 1);
+        else cv.put(HAVE_SET_COLUMN, 0);
 
         // 新增一筆資料並取得編號
         // 第一個參數是表格名稱
@@ -121,6 +125,8 @@ public class Alarm_Item_DBSet {
         else cv.put(SATURDAY_COLUMN, 0);
         if(item.weekStart[6]) cv.put(SUNDAY_COLUMN, 1);
         else cv.put(SUNDAY_COLUMN, 0);
+        if(item.isHaveSet()) cv.put(HAVE_SET_COLUMN, 1);
+        else cv.put(HAVE_SET_COLUMN, 0);
 
         // 設定修改資料的條件為編號
         // 格式為「欄位名稱＝資料」
@@ -198,6 +204,8 @@ public class Alarm_Item_DBSet {
         else result.weekStart[5] = false;
         if(cursor.getInt(11) == 1) result.weekStart[6] = true;
         else result.weekStart[6] = false;
+        if(cursor.getInt(12) == 1) result.setHaveSet(true);
+        else result.setHaveSet(false);
 
         // 回傳結果
         return result;
