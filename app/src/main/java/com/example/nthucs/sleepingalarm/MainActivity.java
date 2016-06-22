@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
                 goToSetExistedAlarm.putExtra("AlarmBundle", alarmBundle);
 
                 goToSetExistedAlarm.setClass(MainActivity.this, NewAlarmActivity.class);
-                MainActivity.this.startActivityForResult(goToSetExistedAlarm, 0);
+                MainActivity.this.startActivityForResult(goToSetExistedAlarm, 1);
             }
         });
 
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             //將包裹從 Intent 中取出。
             Bundle alarmBundle = data.getBundleExtra("ReturnBundle");
             //將回傳值用指定的 key 取出
@@ -343,18 +343,18 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_shop) {
 
-            Intent i = new Intent();
-            i.setClass(MainActivity.this, ShopActivity.class);
-            startActivity(i);
+            Intent goToShop = new Intent();
 
-            /*
-            fragment= new FragmentShop();
-            FrameLayout f = (FrameLayout)findViewById(R.id.mainFrame);
-            f.setVisibility(View.VISIBLE);
-            ListView mainList = (ListView)findViewById(R.id.MainAlarmListView);
-            mainList.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
-            */
+            Bundle parameterBundle = new Bundle();
+            parameterBundle.putInt("Money", parameter.getMoney());
+            parameterBundle.putInt("NumberTimeTicket", parameter.getNumberTimeTicket());
+            parameterBundle.putInt("NumberRingTicket", parameter.getNumberRingTicket());
+
+            goToShop.putExtra("ParameterBundle", parameterBundle);
+
+            goToShop.setClass(MainActivity.this, ShopActivity.class);
+            startActivity(goToShop);
+
         } else if (id == R.id.nav_option) {
 
             fragment = new FragmentOption();

@@ -23,6 +23,11 @@ public class ShopActivity extends FragmentActivity {
     private ArrayList<View> viewList;
     private static String TIME_TICKET_PRICE = " $ 30 ";
     private static String RING_TICKET_PRICE = " $ 20 ";
+    private static int PRICE_T = 30;
+    private static int PRICE_R = 20;
+    private int money;
+    private int numberTimeTicket;
+    private int numberRingTicket;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -36,13 +41,19 @@ public class ShopActivity extends FragmentActivity {
         View v1 = mInflater.inflate(R.layout.item1_fragment, null);
         View v2 = mInflater.inflate(R.layout.item2_fragment, null);
 
-        viewList = new ArrayList<View>();
+        viewList = new ArrayList<>();
 
         viewList.add(v1);
         viewList.add(v2);
 
         mViewPager.setAdapter(new PagerAdapterItem(viewList));
         mViewPager.setCurrentItem(0);
+
+        Bundle parameterBundle = getIntent().getBundleExtra("ParameterBundle");
+        money = parameterBundle.getInt("Money");
+        numberTimeTicket = parameterBundle.getInt("NumberTimeTicket");
+        numberRingTicket = parameterBundle.getInt("NumberRingTicket");
+
 
         final TextView priceText = (TextView)findViewById(R.id.priceText);
 
@@ -79,27 +90,59 @@ public class ShopActivity extends FragmentActivity {
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(ShopActivity.this)
-                        .setTitle("Buy this ?")
-                        .setMessage("Do you want to buy this ticket ?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (radioGroup.getCheckedRadioButtonId() == R.id.radioButton) {
-                                    Toast.makeText(ShopActivity.this, "Buy first", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ShopActivity.this, "Buy second", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "Not Buy", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .show();
+                if(radioGroup.getCheckedRadioButtonId() == R.id.radioButton){
+                    if(money >= PRICE_T){
+                        buyDialog(1);
+                    }else{
+                        noMoneyDialog();
+                    }
+                } else {
+                    if(money >= PRICE_R){
+                        buyDialog(2);
+                    }else{
+                        noMoneyDialog();
+                    }
+                }
             }
         });
     }
+
+    public void buyDialog(final int whichone){
+        new AlertDialog.Builder(ShopActivity.this)
+                .setTitle("Buy this ?")
+                .setMessage("Do you want to buy this ticket ?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (whichone == 1) {
+                            money -= PRICE_T;
+                            Toast.makeText(ShopActivity.this, "Buy first", Toast.LENGTH_SHORT).show();
+                        } else {
+                            money -= PRICE_R;
+                            Toast.makeText(ShopActivity.this, "Buy second", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Not Buy", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+    }
+
+    public void noMoneyDialog(){
+        new AlertDialog.Builder(ShopActivity.this)
+                .setTitle("Warning")
+                .setMessage("You have not enough money ! ")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
 }
