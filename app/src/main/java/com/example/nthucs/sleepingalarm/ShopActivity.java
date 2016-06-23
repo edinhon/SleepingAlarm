@@ -27,12 +27,15 @@ public class ShopActivity extends FragmentActivity {
     private static String RING_TICKET_PRICE = " $ 20 ";
     private static int PRICE_T = 30;
     private static int PRICE_R = 20;
+    private static String TIME_TICKET_TEXT = "Time Ticket";
+    private static String RING_TICKET_TEXT = "Ring Ticket";
     private int money;
     private int numberTimeTicket;
     private int numberRingTicket;
     TextView moneyText;
     TextView ownText;
     TextView priceText;
+    TextView itemText;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -63,9 +66,11 @@ public class ShopActivity extends FragmentActivity {
         moneyText = (TextView)findViewById(R.id.moneyText);
         ownText = (TextView)findViewById(R.id.ownText);
         priceText = (TextView)findViewById(R.id.priceText);
+        itemText = (TextView)findViewById(R.id.itemText);
         moneyText.setText("Money : " + Integer.toString(money));
         ownText.setText("Own : " + Integer.toString(numberTimeTicket));
         priceText.setText(TIME_TICKET_PRICE);
+        itemText.setText(TIME_TICKET_TEXT);
 
         final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
         radioGroup.check(R.id.radioButton);
@@ -82,11 +87,13 @@ public class ShopActivity extends FragmentActivity {
                         radioGroup.check(R.id.radioButton);
                         priceText.setText(TIME_TICKET_PRICE);
                         ownText.setText("Own : " + Integer.toString(numberTimeTicket));
+                        itemText.setText(TIME_TICKET_TEXT);
                         break;
                     case 1:
                         radioGroup.check(R.id.radioButton2);
                         priceText.setText(RING_TICKET_PRICE);
                         ownText.setText("Own : " + Integer.toString(numberRingTicket));
+                        itemText.setText(RING_TICKET_TEXT);
                         break;
                 }
             }
