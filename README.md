@@ -1,2 +1,2 @@
 # SleepingAlarm
-Software Studio Final Project: A interactive alarm android app
+Software Studio Final Project: An interactive alarm android app
